@@ -128,11 +128,9 @@
                     <p id="current-date" class="text-slate-400 text-sm mt-0.5">Welcome back</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <!-- Refresh Button -->
                     <button onclick="refreshData()" class="bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700/60 px-3.5 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-rotate" id="refresh-icon"></i> Refresh Data
                     </button>
-
                     <div class="bg-slate-900 border border-slate-800 px-4 py-2 rounded-xl flex items-center gap-3">
                         <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" id="db-status-dot"></span>
                         <span class="text-xs font-medium text-slate-300" id="db-status-text">Connected to Firebase</span>
@@ -160,7 +158,6 @@
 
                 <!-- Capital Management Actions Row -->
                 <div class="grid grid-cols-2 gap-6">
-                    <!-- Add Capital Box -->
                     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between">
                         <div>
                             <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-circle-plus text-emerald-400 mr-2"></i> Add Capital</h3>
@@ -181,7 +178,6 @@
                         </form>
                     </div>
 
-                    <!-- Withdraw Capital Box -->
                     <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl shadow-lg flex flex-col justify-between">
                         <div>
                             <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-circle-minus text-rose-400 mr-2"></i> Withdraw Capital</h3>
@@ -293,9 +289,7 @@
                                     <th class="p-4 text-right">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="trades-table-body" class="divide-y divide-slate-800 text-sm">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <tbody id="trades-table-body" class="divide-y divide-slate-800 text-sm"></tbody>
                         </table>
                     </div>
                 </div>
@@ -321,9 +315,7 @@
                                     <th class="p-4 text-right">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="capital-table-body" class="divide-y divide-slate-800 text-sm">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <tbody id="capital-table-body" class="divide-y divide-slate-800 text-sm"></tbody>
                         </table>
                     </div>
                 </div>
@@ -354,9 +346,7 @@
                                     <th class="p-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="recycle-table-body" class="divide-y divide-slate-800 text-sm">
-                                <!-- Populated dynamically -->
-                            </tbody>
+                            <tbody id="recycle-table-body" class="divide-y divide-slate-800 text-sm"></tbody>
                         </table>
                     </div>
                 </div>
@@ -371,7 +361,6 @@
                     </div>
 
                     <div class="space-y-4 pt-2">
-                        <!-- Change Credentials Section -->
                         <div class="p-4 bg-slate-950 border border-slate-800 rounded-xl space-y-3">
                             <h4 class="text-sm font-semibold text-indigo-400"><i class="fa-solid fa-lock mr-1.5"></i> Change Login Credentials</h4>
                             <div class="grid grid-cols-2 gap-3">
@@ -409,7 +398,6 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        // Lot sizes configuration
         const lotSizes = {
             'Nifty': 25,
             'Sensex': 10,
@@ -417,7 +405,6 @@
             'FinNifty': 25
         };
 
-        // App state
         let appState = {
             userId: 'Anurag',
             password: '12345',
@@ -431,7 +418,6 @@
         let equityChartInstance = null;
         let dbRef = null;
 
-        // Load saved settings on startup immediately
         const savedSettingsInit = localStorage.getItem('trading_tracker_settings');
         if(savedSettingsInit) {
             try {
@@ -443,14 +429,12 @@
             } catch(e) {}
         }
 
-        // Set initial login fields value & auto lot size
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('login-user').value = appState.userId;
             document.getElementById('sidebar-username').innerText = appState.userId;
             updateAutoLotSize();
         });
 
-        // Auto calculate Quantity based on Lot Size & Lots Input
         function updateAutoLotSize() {
             const index = document.getElementById('trade-index').value;
             const singleLotSize = lotSizes[index] || 25;
@@ -463,7 +447,6 @@
             updateAutoLotSize();
         }
 
-        // Login Handler
         function handleLogin() {
             const user = document.getElementById('login-user').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
@@ -493,7 +476,6 @@
             document.getElementById('login-error').classList.add('hidden');
         }
 
-        // Refresh Data Handler
         function refreshData() {
             const icon = document.getElementById('refresh-icon');
             icon.classList.add('fa-spin');
@@ -518,7 +500,6 @@
             }
         }
 
-        // Forgot Password Handlers
         function openForgotPassword() {
             document.getElementById('forgot-user').value = '';
             document.getElementById('forgot-msg').classList.add('hidden');
@@ -545,7 +526,6 @@
             }
         }
 
-        // Tab Switching
         function switchTab(tabId) {
             ['dashboard', 'trades', 'capital', 'recycle', 'settings'].forEach(t => {
                 const tabEl = document.getElementById(`tab-${t}`);
@@ -571,7 +551,6 @@
             }
         }
 
-        // Initialize App & Firebase
         function initApp() {
             document.getElementById('setting-user-id').value = appState.userId;
             document.getElementById('setting-password').value = appState.password;
@@ -602,7 +581,6 @@
                     document.getElementById('db-status-text').innerText = "Offline Mode (Local)";
                 });
             } catch(e) {
-                console.error(e);
                 document.getElementById('db-status-dot').className = "w-2.5 h-2.5 rounded-full bg-amber-400";
                 document.getElementById('db-status-text').innerText = "Offline Mode (Local)";
                 loadLocalFallback();
@@ -635,7 +613,6 @@
             }
         }
 
-        // Capital Transactions Handler (Add / Withdraw)
         function handleCapitalTransaction(e, type) {
             e.preventDefault();
             const amountInput = document.getElementById(type === 'add' ? 'add-capital-amount' : 'withdraw-capital-amount');
@@ -695,7 +672,6 @@
             const sell = parseFloat(document.getElementById('trade-sell').value);
             const notes = document.getElementById('trade-notes').value;
 
-            // Auto-fetch total qty based on selected index lot size
             const qty = lots * (lotSizes[index] || 25);
             const pnl = (sell - buy) * qty;
 
@@ -810,7 +786,6 @@
 
             document.getElementById('recycle-badge').innerText = appState.recycleBin.length;
 
-            // Trades table render
             const tbody = document.getElementById('trades-table-body');
             tbody.innerHTML = '';
             if(appState.trades.length === 0) {
@@ -839,7 +814,6 @@
             }
             document.getElementById('trade-count').innerText = `${appState.trades.length} Trades`;
 
-            // Capital Logs table render
             const capTbody = document.getElementById('capital-table-body');
             capTbody.innerHTML = '';
             if(appState.capitalLogs.length === 0) {
@@ -863,7 +837,6 @@
                 });
             }
 
-            // Recycle bin render
             const recTbody = document.getElementById('recycle-table-body');
             recTbody.innerHTML = '';
             if(appState.recycleBin.length === 0) {
