@@ -142,10 +142,10 @@
 
             <!-- TAB 1: DASHBOARD -->
             <div id="tab-dashboard" class="space-y-6">
-                <!-- Metrics Grid -->
-                <div class="grid grid-cols-4 gap-6">
+                <!-- Metrics Grid (Updated to 3 columns since Daily Loss Limit is removed) -->
+                <div class="grid grid-cols-3 gap-6">
                     <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Initial Capital</p>
+                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Initial Capital (Updated)</p>
                         <h3 class="text-2xl font-bold text-white mt-2" id="metric-initial-cap">₹50,000</h3>
                     </div>
                     <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
@@ -155,10 +155,6 @@
                     <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
                         <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total P&L</p>
                         <h3 class="text-2xl font-bold text-emerald-400 mt-2" id="metric-total-pnl">₹0.00</h3>
-                    </div>
-                    <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Daily Loss Limit</p>
-                        <h3 class="text-2xl font-bold text-rose-400 mt-2" id="metric-loss-limit">₹2,000</h3>
                     </div>
                 </div>
 
@@ -361,7 +357,7 @@
                 <div class="bg-slate-900 border border-slate-800 p-6 rounded-2xl space-y-6 shadow-lg">
                     <div>
                         <h3 class="text-lg font-bold text-white">Configuration Settings</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Manage your login credentials, capital, risk limits, and Firebase connection.</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Manage your login credentials, capital, and Firebase connection.</p>
                     </div>
 
                     <div class="space-y-4 pt-2">
@@ -383,10 +379,6 @@
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Base Initial Capital (₹)</label>
                             <input type="number" id="setting-initial-capital" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Daily Loss Limit (₹)</label>
-                            <input type="number" id="setting-loss-limit" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Firebase Database URL</label>
@@ -420,7 +412,6 @@
             userId: 'Anurag',
             password: '12345',
             initialCapital: 50000,
-            dailyLossLimit: 2000,
             dbUrl: 'https://trading-tracker-f6400-default-rtdb.asia-southeast1.firebasedatabase.app/',
             trades: [],
             recycleBin: [],
@@ -438,7 +429,6 @@
                 appState.userId = parsed.userId || 'Anurag';
                 appState.password = parsed.password || '12345';
                 appState.initialCapital = parsed.initialCapital || 50000;
-                appState.dailyLossLimit = parsed.dailyLossLimit || 2000;
                 appState.dbUrl = parsed.dbUrl || appState.dbUrl;
             } catch(e) {}
         }
@@ -562,7 +552,6 @@
             document.getElementById('setting-user-id').value = appState.userId;
             document.getElementById('setting-password').value = appState.password;
             document.getElementById('setting-initial-capital').value = appState.initialCapital;
-            document.getElementById('setting-loss-limit').value = appState.dailyLossLimit;
             document.getElementById('setting-db-url').value = appState.dbUrl;
 
             document.getElementById('sidebar-username').innerText = appState.userId;
@@ -633,7 +622,6 @@
 
             if(!amount || amount <= 0) return;
 
-            // Check if withdrawal exceeds current available capital
             if(type === 'withdraw') {
                 let totalPnl = 0;
                 appState.trades.forEach(t => totalPnl += t.pnl);
@@ -749,14 +737,12 @@
             if(newPass) appState.password = newPass;
 
             appState.initialCapital = parseFloat(document.getElementById('setting-initial-capital').value) || 50000;
-            appState.dailyLossLimit = parseFloat(document.getElementById('setting-loss-limit').value) || 2000;
             appState.dbUrl = document.getElementById('setting-db-url').value;
 
             localStorage.setItem('trading_tracker_settings', JSON.stringify({
                 userId: appState.userId,
                 password: appState.password,
                 initialCapital: appState.initialCapital,
-                dailyLossLimit: appState.dailyLossLimit,
                 dbUrl: appState.dbUrl
             }));
 
@@ -784,17 +770,16 @@
                 else netAddedCapital -= c.amount;
             });
 
-            const effectiveInitialCap = appState.initialCapital + netAddedCapital;
-            const currentCap = effectiveInitialCap + totalPnl;
+            const dynamicInitialCap = appState.initialCapital + netAddedCapital + totalPnl;
+            const currentCap = dynamicInitialCap;
 
-            document.getElementById('metric-initial-cap').innerText = `₹${effectiveInitialCap.toLocaleString('en-IN')}`;
-            document.getElementById('metric-current-cap').innerText = `₹${currentCap.toLocaleString('en-IN')}`;
+            document.getElementById('metric-initial-cap').innerText = `₹${dynamicInitialCap.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            document.getElementById('metric-current-cap').innerText = `₹${currentCap.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             
             const pnlEl = document.getElementById('metric-total-pnl');
             pnlEl.innerText = `${totalPnl >= 0 ? '+' : ''}₹${totalPnl.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             pnlEl.className = `text-2xl font-bold mt-2 ${totalPnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
 
-            document.getElementById('metric-loss-limit').innerText = `₹${appState.dailyLossLimit.toLocaleString('en-IN')}`;
             document.getElementById('recycle-badge').innerText = appState.recycleBin.length;
 
             // Trades table render
