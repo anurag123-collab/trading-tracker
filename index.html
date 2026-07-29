@@ -1,29 +1,19 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trading Tracker by Anurag Patel</title>
+    <title>Trading Tracker Pro - Anurag Patel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script>
         tailwind.config = {
             darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0f172a',
-                        cardBg: '#1e293b',
-                        accentGreen: '#10b981',
-                        accentRed: '#ef4444'
-                    }
-                }
-            }
         }
     </script>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen">
+<body class="bg-slate-900 dark:bg-slate-900 text-slate-100 transition-colors duration-300 font-sans min-h-screen">
 
     <!-- LOGIN SCREEN -->
     <div id="loginScreen" class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
@@ -32,12 +22,12 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-full mb-3 text-2xl font-bold">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-white">Trading Tracker</h1>
+                <h1 class="text-2xl font-bold text-white">Trading Tracker Pro</h1>
                 <p class="text-slate-400 text-sm mt-1">Managed by Anurag Patel</p>
             </div>
             <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">Username / Trader Name</label>
+                    <label class="block text-sm font-medium text-slate-300 mb-1">Trader Name</label>
                     <input type="text" id="usernameInput" required value="Anurag Patel" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                 </div>
                 <div>
@@ -51,9 +41,9 @@
         </div>
     </div>
 
-    <!-- MAIN DASHBOARD (Hidden by default) -->
+    <!-- MAIN DASHBOARD -->
     <div id="dashboardApp" class="hidden min-h-screen flex flex-col">
-        <!-- Navbar -->
+        <!-- Header -->
         <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
@@ -64,7 +54,12 @@
                     <span class="text-xs text-indigo-400 font-medium">Anurag Patel's Portfolio</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3">
+                <!-- Theme Switcher Button -->
+                <button onclick="toggleTheme()" class="px-3 py-2 bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white rounded-lg text-sm font-medium transition flex items-center space-x-2">
+                    <i class="fa-solid fa-sun" id="themeIcon"></i>
+                    <span id="themeText">Light Mode</span>
+                </button>
                 <button onclick="exportData()" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-medium transition flex items-center space-x-2">
                     <i class="fa-solid fa-download"></i><span>Export CSV</span>
                 </button>
@@ -80,7 +75,7 @@
             <!-- Metrics Summary Cards -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow">
-                    <p class="text-slate-400 text-sm font-medium">Total P&L</p>
+                    <p class="text-slate-400 text-sm font-medium">Total Net P&L</p>
                     <h3 id="totalPnL" class="text-2xl font-bold mt-1 text-slate-100">₹0.00</h3>
                     <span id="pnlBadge" class="text-xs px-2 py-0.5 rounded mt-2 inline-block bg-slate-700 text-slate-300">Neutral</span>
                 </div>
@@ -95,23 +90,23 @@
                     <span class="text-xs text-indigo-400 mt-2 inline-block">Active Log</span>
                 </div>
                 <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow">
-                    <p class="text-slate-400 text-sm font-medium">Profit Factor</p>
-                    <h3 id="profitFactor" class="text-2xl font-bold mt-1 text-slate-100">0.00</h3>
-                    <span class="text-xs text-slate-400 mt-2 inline-block">Gross Win / Gross Loss</span>
+                    <p class="text-slate-400 text-sm font-medium">Avg Risk-Reward (RRR)</p>
+                    <h3 id="avgRRR" class="text-2xl font-bold mt-1 text-slate-100">1 : 0.0</h3>
+                    <span class="text-xs text-slate-400 mt-2 inline-block">Risk vs Reward Ratio</span>
                 </div>
             </div>
 
-            <!-- Charts & Quick Add Section -->
+            <!-- Form & Chart Section -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Add Trade Form -->
+                <!-- Trade Add Form -->
                 <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow lg:col-span-1">
                     <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
                         <i class="fa-solid fa-plus-circle text-indigo-500"></i><span>Add New Trade</span>
                     </h3>
-                    <form id="tradeForm" onsubmit="addTrade(event)" class="space-y-4">
+                    <form id="tradeForm" onsubmit="addTrade(event)" class="space-y-3">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Asset / Stock / Crypto</label>
-                            <input type="text" id="tradeAsset" placeholder="e.g. NIFTY,RELIANCE,BTC" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Asset Symbol</label>
+                            <input type="text" id="tradeAsset" placeholder="e.g. NIFTY, BANKNIFTY, BTC" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
@@ -142,17 +137,21 @@
                         </div>
                         <div class="grid grid-cols-2 gap-3">
                             <div>
+                                <label class="block text-xs font-medium text-slate-300 mb-1">Stop Loss Price (₹)</label>
+                                <input type="number" step="any" id="tradeSL" placeholder="0.00" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            </div>
+                            <div>
                                 <label class="block text-xs font-medium text-slate-300 mb-1">Quantity</label>
                                 <input type="number" id="tradeQty" placeholder="1" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                             </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Date</label>
-                                <input type="date" id="tradeDate" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-medium text-slate-300 mb-1">Date</label>
+                            <input type="date" id="tradeDate" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-xs font-medium text-slate-300 mb-1">Notes / Strategy</label>
-                            <input type="text" id="tradeNotes" placeholder="e.g. Breakout strategy" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <input type="text" id="tradeNotes" placeholder="e.g. Price Action Breakout" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
                         </div>
                         <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-lg transition shadow-md shadow-indigo-600/20">
                             Save Trade
@@ -160,7 +159,7 @@
                     </form>
                 </div>
 
-                <!-- Chart Section -->
+                <!-- Cumulative P&L Chart -->
                 <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow lg:col-span-2 flex flex-col justify-between">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold text-white flex items-center space-x-2">
@@ -174,13 +173,17 @@
                 </div>
             </div>
 
-            <!-- Trade History Table -->
+            <!-- Trade History & Filters -->
             <div class="bg-slate-800 border border-slate-700 rounded-xl shadow overflow-hidden">
-                <div class="p-5 border-b border-slate-700 flex justify-between items-center">
+                <div class="p-5 border-b border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                     <h3 class="text-lg font-bold text-white flex items-center space-x-2">
                         <i class="fa-solid fa-list text-indigo-500"></i><span>Trade Journal & History</span>
                     </h3>
-                    <span id="tableCountBadge" class="text-xs bg-slate-700 text-slate-300 px-2.5 py-1 rounded-full">0 entries</span>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="filterTrades('ALL')" class="px-2.5 py-1 bg-indigo-600 text-xs text-white rounded-md">All</button>
+                        <button onclick="filterTrades('WIN')" class="px-2.5 py-1 bg-emerald-600/20 text-emerald-400 text-xs rounded-md">Wins</button>
+                        <button onclick="filterTrades('LOSS')" class="px-2.5 py-1 bg-rose-600/20 text-rose-400 text-xs rounded-md">Losses</button>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse">
@@ -192,6 +195,7 @@
                                 <th class="p-3.5">Qty</th>
                                 <th class="p-3.5">Entry</th>
                                 <th class="p-3.5">Exit</th>
+                                <th class="p-3.5">Risk/Reward</th>
                                 <th class="p-3.5">P&L (₹)</th>
                                 <th class="p-3.5">Status</th>
                                 <th class="p-3.5">Notes</th>
@@ -200,7 +204,7 @@
                         </thead>
                         <tbody id="tradeTableBody" class="divide-y divide-slate-700 text-sm">
                             <tr>
-                                <td colspan="10" class="text-center py-6 text-slate-500">No trades recorded yet. Add your first trade above!</td>
+                                <td colspan="11" class="text-center py-6 text-slate-500">No trades recorded yet. Add your first trade above!</td>
                             </tr>
                         </tbody>
                     </table>
@@ -208,20 +212,22 @@
             </div>
 
         </main>
-
-        <!-- Footer -->
-        <footer class="mt-auto border-t border-slate-800 py-4 text-center text-xs text-slate-500">
-            Trading Tracker by Anurag Patel &bull; Professional Risk & Journal Suite
-        </footer>
     </div>
 
-    <!-- Script Logic -->
+    <!-- Script -->
     <script>
         let trades = JSON.parse(localStorage.getItem('anurag_trading_tracker_data')) || [];
+        let activeFilter = 'ALL';
         let pnlChartInstance = null;
 
-        // Set default date to today
         document.getElementById('tradeDate').valueAsDate = new Date();
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            document.getElementById('themeText').innerText = isDark ? 'Light Mode' : 'Dark Mode';
+            document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+        }
 
         function handleLogin(e) {
             e.preventDefault();
@@ -229,10 +235,7 @@
             const pin = document.getElementById('pinInput').value;
             if(pin.trim() !== "") {
                 localStorage.setItem('anurag_logged_in', 'true');
-                localStorage.setItem('anurag_user', username);
                 checkAuth();
-            } else {
-                alert('Please enter a valid PIN');
             }
         }
 
@@ -260,26 +263,28 @@
             const status = document.getElementById('tradeStatus').value;
             const entry = parseFloat(document.getElementById('tradeEntry').value);
             const exit = parseFloat(document.getElementById('tradeExit').value);
+            const sl = parseFloat(document.getElementById('tradeSL').value) || entry;
             const qty = parseInt(document.getElementById('tradeQty').value);
             const date = document.getElementById('tradeDate').value;
             const notes = document.getElementById('tradeNotes').value;
 
-            let pnl = 0;
-            if(type === 'BUY') {
-                pnl = (exit - entry) * qty;
-            } else {
-                pnl = (entry - exit) * qty;
-            }
+            let pnl = type === 'BUY' ? (exit - entry) * qty : (entry - exit) * qty;
+            
+            // RRR Calculation
+            let risk = Math.abs(entry - sl);
+            let reward = Math.abs(exit - entry);
+            let rrr = risk > 0 ? (reward / risk).toFixed(1) : '1.0';
 
-            const newTrade = {
-                id: Date.now(),
-                asset, type, status, entry, exit, qty, date, notes, pnl
-            };
-
+            const newTrade = { id: Date.now(), asset, type, status, entry, exit, sl, qty, date, notes, pnl, rrr };
             trades.push(newTrade);
             saveAndRender();
             document.getElementById('tradeForm').reset();
             document.getElementById('tradeDate').valueAsDate = new Date();
+        }
+
+        function filterTrades(filter) {
+            activeFilter = filter;
+            renderDashboard();
         }
 
         function deleteTrade(id) {
@@ -288,7 +293,7 @@
         }
 
         function clearAllTrades() {
-            if(confirm('Are you sure you want to delete all recorded trades?')) {
+            if(confirm('Are you sure you want to delete all trades?')) {
                 trades = [];
                 saveAndRender();
             }
@@ -301,24 +306,28 @@
 
         function renderDashboard() {
             const tbody = document.getElementById('tradeTableBody');
-            document.getElementById('tableCountBadge').innerText = `${trades.length} entries`;
+            let filtered = trades;
+            if(activeFilter !== 'ALL') {
+                filtered = trades.filter(t => t.status === activeFilter);
+            }
 
-            if(trades.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="10" class="text-center py-6 text-slate-500">No trades recorded yet. Add your first trade above!</td></tr>`;
+            if(filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="11" class="text-center py-6 text-slate-500">No trades match this filter.</td></tr>`;
             } else {
-                tbody.innerHTML = trades.slice().reverse().map(t => `
-                    <tr class="hover:bg-slate-750 transition">
+                tbody.innerHTML = filtered.slice().reverse().map(t => `
+                    <tr class="hover:bg-slate-750 transition border-b border-slate-700/50">
                         <td class="p-3.5 text-slate-300">${t.date}</td>
                         <td class="p-3.5 font-bold text-white">${t.asset}</td>
                         <td class="p-3.5"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'BUY' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">${t.type}</span></td>
                         <td class="p-3.5 text-slate-300">${t.qty}</td>
                         <td class="p-3.5 text-slate-300">₹${t.entry.toFixed(2)}</td>
                         <td class="p-3.5 text-slate-300">₹${t.exit.toFixed(2)}</td>
+                        <td class="p-3.5 text-slate-300 font-mono">1:${t.rrr || '1'}</td>
                         <td class="p-3.5 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}">₹${t.pnl.toFixed(2)}</td>
                         <td class="p-3.5"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.status === 'WIN' ? 'bg-emerald-500/20 text-emerald-400' : t.status === 'LOSS' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400'}">${t.status}</span></td>
                         <td class="p-3.5 text-slate-400 italic">${t.notes || '-'}</td>
                         <td class="p-3.5 text-center">
-                            <button onclick="deleteTrade(${t.id})" class="text-rose-400 hover:text-rose-300 p-1"><i class="fa-solid fa-trash-can"></i></button>
+                            <button onclick="deleteTrade(${t.id})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash-can"></i></button>
                         </td>
                     </tr>
                 `).join('');
@@ -329,43 +338,33 @@
             let wins = trades.filter(t => t.status === 'WIN').length;
             let losses = trades.filter(t => t.status === 'LOSS').length;
             let winRateVal = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-
-            let grossWins = trades.filter(t => t.pnl > 0).reduce((acc, t) => acc + t.pnl, 0);
-            let grossLosses = Math.abs(trades.filter(t => t.pnl < 0).reduce((acc, t) => acc + t.pnl, 0));
-            let profitFactorVal = grossLosses > 0 ? (grossWins / grossLosses).toFixed(2) : (grossWins > 0 ? '∞' : '0.00');
+            
+            let avgRRRVal = trades.length > 0 ? (trades.reduce((acc, t) => acc + parseFloat(t.rrr || 1), 0) / trades.length).toFixed(1) : '0.0';
 
             document.getElementById('totalPnL').innerText = `₹${totalPnL.toFixed(2)}`;
             document.getElementById('totalPnL').className = `text-2xl font-bold mt-1 ${totalPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-            
-            const badge = document.getElementById('pnlBadge');
-            badge.innerText = totalPnL >= 0 ? 'Profitable' : 'In Drawdown';
-            badge.className = `text-xs px-2 py-0.5 rounded mt-2 inline-block font-medium ${totalPnL >= 0 ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}`;
-
             document.getElementById('winRate').innerText = `${winRateVal}%`;
             document.getElementById('winCount').innerText = wins;
             document.getElementById('lossCount').innerText = losses;
             document.getElementById('totalTrades').innerText = trades.length;
-            document.getElementById('profitFactor').innerText = profitFactorVal;
+            document.getElementById('avgRRR').innerText = `1 : ${avgRRRVal}`;
 
             renderChart();
         }
 
         function renderChart() {
             const ctx = document.getElementById('pnlChart').getContext('2d');
-            
             let cumulative = 0;
             let labels = ['Start'];
             let dataPoints = [0];
 
             trades.forEach((t, index) => {
                 cumulative += t.pnl;
-                labels.push(`Trade ${index + 1}`);
+                labels.push(`T${index + 1}`);
                 dataPoints.push(cumulative);
             });
 
-            if(pnlChartInstance) {
-                pnlChartInstance.destroy();
-            }
+            if(pnlChartInstance) pnlChartInstance.destroy();
 
             pnlChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -375,52 +374,38 @@
                         label: 'Cumulative P&L (₹)',
                         data: dataPoints,
                         borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                        borderWidth: 2.5,
+                        backgroundColor: 'rgba(99, 102, 241, 0.15)',
+                        borderWidth: 2,
                         fill: true,
-                        tension: 0.3,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#6366f1'
+                        tension: 0.3
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        x: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { size: 10 } }
-                        },
-                        y: {
-                            grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { size: 10 } }
-                        }
+                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
+                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }
                     }
                 }
             });
         }
 
         function exportData() {
-            if(trades.length === 0) {
-                alert('No trades available to export.');
-                return;
-            }
+            if(trades.length === 0) return alert('No trades available to export.');
             let csv = 'Date,Asset,Type,Quantity,Entry,Exit,P&L,Status,Notes\n';
             trades.forEach(t => {
                 csv += `${t.date},${t.asset},${t.type},${t.qty},${t.entry},${t.exit},${t.pnl},${t.status},"${t.notes || ''}"\n`;
             });
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob([csv], { type: 'text/csv;' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Anurag_Trading_Journal_${new Date().toISOString().slice(0,10)}.csv`;
+            a.download = `Trading_Journal_${new Date().toISOString().slice(0,10)}.csv`;
             a.click();
         }
 
-        // Initialize on load
         checkAuth();
     </script>
 </body>
