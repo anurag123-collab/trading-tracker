@@ -211,14 +211,14 @@
                         <form id="trade-form" onsubmit="addTrade(event)" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-medium text-slate-400 mb-1">Index / Asset</label>
-                                <select id="trade-index" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                <select id="trade-index" onchange="updateAutoLotSize()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
                                     <option value="Nifty">Nifty</option>
                                     <option value="Sensex">Sensex</option>
                                     <option value="BankNifty">BankNifty</option>
                                     <option value="FinNifty">FinNifty</option>
                                 </select>
                             </div>
-                            <div class="grid grid-cols-3 gap-2">
+                            <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Type</label>
                                     <select id="trade-type" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
@@ -228,11 +228,17 @@
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Strike Price</label>
-                                    <input type="number" step="0.5" id="trade-strike" required placeholder="24500" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <input type="number" step="0.5" id="trade-strike" required placeholder="e.g. 24500" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
                                 </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-3">
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Lots</label>
-                                    <input type="number" id="trade-lots" value="1" min="1" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <input type="number" id="trade-lots" value="1" min="1" oninput="calculateAutoQty()" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Auto Quantity (Qty)</label>
+                                    <input type="text" id="trade-qty-display" readonly value="25" class="w-full bg-slate-900 border border-slate-800 rounded-lg px-3 py-2 text-indigo-400 font-semibold text-sm focus:outline-none cursor-not-allowed">
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
@@ -279,7 +285,7 @@
                                     <th class="p-4">Date / Time</th>
                                     <th class="p-4">Asset & Strike</th>
                                     <th class="p-4">Type</th>
-                                    <th class="p-4">Lots</th>
+                                    <th class="p-4">Lots / Qty</th>
                                     <th class="p-4">Buy Price</th>
                                     <th class="p-4">Sell Price</th>
                                     <th class="p-4">P&L</th>
@@ -403,7 +409,7 @@
 
     <!-- SCRIPT LOGIC -->
     <script>
-        // Lot sizes configuration
+        // Lot sizes configuration (Aap inko apne hisaab se change kar sakte hain)
         const lotSizes = {
             'Nifty': 25,
             'Sensex': 10,
@@ -437,11 +443,25 @@
             } catch(e) {}
         }
 
-        // Set initial login fields value
+        // Set initial login fields value & auto lot size
         document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('login-user').value = appState.userId;
             document.getElementById('sidebar-username').innerText = appState.userId;
+            updateAutoLotSize();
         });
+
+        // Auto calculate Quantity based on Lot Size & Lots Input
+        function updateAutoLotSize() {
+            const index = document.getElementById('trade-index').value;
+            const singleLotSize = lotSizes[index] || 25;
+            const lots = parseInt(document.getElementById('trade-lots').value) || 1;
+            const totalQty = lots * singleLotSize;
+            document.getElementById('trade-qty-display').value = totalQty;
+        }
+
+        function calculateAutoQty() {
+            updateAutoLotSize();
+        }
 
         // Login Handler
         function handleLogin() {
@@ -675,8 +695,8 @@
             const sell = parseFloat(document.getElementById('trade-sell').value);
             const notes = document.getElementById('trade-notes').value;
 
-            // Auto-fetch lot size based on selected index
-            const qty = lots * lotSizes[index];
+            // Auto-fetch total qty based on selected index lot size
+            const qty = lots * (lotSizes[index] || 25);
             const pnl = (sell - buy) * qty;
 
             const newTrade = {
@@ -698,6 +718,7 @@
             updateUI();
             document.getElementById('trade-form').reset();
             document.getElementById('trade-lots').value = "1";
+            updateAutoLotSize();
         }
 
         function deleteTrade(id) {
@@ -802,7 +823,7 @@
                         <td class="p-4 text-slate-400 text-xs">${t.date}</td>
                         <td class="p-4 font-semibold text-white">${t.index} <span class="text-xs text-indigo-400">(${t.strike || '-'})</span></td>
                         <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${t.type}</span></td>
-                        <td class="p-4 text-slate-300">${t.lots} <span class="text-xs text-slate-500">(${t.qty})</span></td>
+                        <td class="p-4 text-slate-300">${t.lots} lot <span class="text-xs text-slate-500">(${t.qty} qty)</span></td>
                         <td class="p-4 text-slate-300">₹${t.buy.toFixed(2)}</td>
                         <td class="p-4 text-slate-300">₹${t.sell.toFixed(2)}</td>
                         <td class="p-4 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${t.pnl >= 0 ? '+' : ''}₹${t.pnl.toFixed(2)}</td>
@@ -926,7 +947,6 @@
                     }
                 }
             });
-        }
     </script>
 </body>
 </html>
