@@ -40,7 +40,7 @@
                     <input type="password" id="login-pass" value="12345" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
                 </div>
                 <div class="flex items-center justify-between text-xs">
-                    <span class="text-slate-400">Default: Anurag / 12345</span>
+                    <span id="login-default-hint" class="text-slate-400">Default: Anurag / 12345</span>
                     <button onclick="openForgotPassword()" class="text-indigo-400 hover:underline">Forgot Password?</button>
                 </div>
                 <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-lg transition duration-200 shadow-lg shadow-indigo-600/30">
@@ -91,7 +91,7 @@
                     </div>
                     <div>
                         <h1 class="font-bold text-white leading-tight">TradeTracker</h1>
-                        <span class="text-xs text-slate-400">Anurag Patel</span>
+                        <span id="sidebar-username" class="text-xs text-slate-400">Anurag Patel</span>
                     </div>
                 </div>
                 <nav class="p-4 space-y-1">
@@ -281,10 +281,25 @@
                 <div class="bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl space-y-6">
                     <div>
                         <h3 class="text-lg font-bold text-white">Configuration Settings</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Manage your initial capital, risk limits, and Firebase connection.</p>
+                        <p class="text-xs text-slate-400 mt-0.5">Manage your login credentials, capital, risk limits, and Firebase connection.</p>
                     </div>
 
                     <div class="space-y-4 pt-2">
+                        <!-- Change Credentials Section -->
+                        <div class="p-4 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-3">
+                            <h4 class="text-sm font-semibold text-indigo-400"><i class="fa-solid fa-lock mr-1.5"></i> Change Login Credentials</h4>
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">New User ID</label>
+                                    <input type="text" id="setting-user-id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">New Password</label>
+                                    <input type="text" id="setting-password" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                </div>
+                            </div>
+                        </div>
+
                         <div>
                             <label class="block text-xs font-medium text-slate-400 mb-1">Initial Capital (₹)</label>
                             <input type="number" id="setting-initial-capital" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
@@ -322,6 +337,8 @@
 
         // App state
         let appState = {
+            userId: 'Anurag',
+            password: '12345',
             initialCapital: 50000,
             dailyLossLimit: 2000,
             dbUrl: 'https://trading-tracker-f6400-default-rtdb.asia-southeast1.firebasedatabase.app/',
@@ -337,7 +354,8 @@
             const user = document.getElementById('login-user').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
 
-            if (user === 'Anurag' && pass === '12345') {
+            if (user === appState.userId && pass === appState.password) {
+                document.getElementById('login-error').classList.add('hidden');
                 document.getElementById('login-modal').classList.add('hidden');
                 document.getElementById('app-container').classList.remove('hidden');
                 initApp();
@@ -349,6 +367,8 @@
         function handleLogout() {
             document.getElementById('app-container').classList.add('hidden');
             document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('login-user').value = appState.userId;
+            document.getElementById('login-pass').value = '';
         }
 
         // Forgot Password Handlers
@@ -366,9 +386,9 @@
             const user = document.getElementById('forgot-user').value.trim();
             const msgEl = document.getElementById('forgot-msg');
             msgEl.classList.remove('hidden');
-            if(user === 'Anurag') {
+            if(user === appState.userId) {
                 msgEl.className = "text-xs text-center text-emerald-400 font-medium";
-                msgEl.innerText = "Your password is: 12345";
+                msgEl.innerText = `Your password is: ${appState.password}`;
             } else if(user !== "") {
                 msgEl.className = "text-xs text-center text-rose-400 font-medium";
                 msgEl.innerText = "User ID not found!";
@@ -407,15 +427,23 @@
             const savedSettings = localStorage.getItem('trading_tracker_settings');
             if(savedSettings) {
                 const parsed = JSON.parse(savedSettings);
+                appState.userId = parsed.userId || 'Anurag';
+                appState.password = parsed.password || '12345';
                 appState.initialCapital = parsed.initialCapital || 50000;
                 appState.dailyLossLimit = parsed.dailyLossLimit || 2000;
                 appState.dbUrl = parsed.dbUrl || appState.dbUrl;
             }
 
             // Populate settings inputs
+            document.getElementById('setting-user-id').value = appState.userId;
+            document.getElementById('setting-password').value = appState.password;
             document.getElementById('setting-initial-capital').value = appState.initialCapital;
             document.getElementById('setting-loss-limit').value = appState.dailyLossLimit;
             document.getElementById('setting-db-url').value = appState.dbUrl;
+
+            // Update sidebar user name
+            document.getElementById('sidebar-username').innerText = appState.userId;
+            document.getElementById('login-default-hint').innerText = `ID: ${appState.userId} / Pass: [Hidden]`;
 
             // Initialize Firebase
             try {
@@ -447,7 +475,7 @@
 
             // Date header
             const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-            document.getElementById('current-date').innerText = `Welcome back, Anurag • ${new Date().toLocaleDateString('en-US', options)}`;
+            document.getElementById('current-date').innerText = `Welcome back, ${appState.userId} • ${new Date().toLocaleDateString('en-US', options)}`;
         }
 
         function loadLocalFallback() {
@@ -469,9 +497,7 @@
             }
         }
 
-        function updateLotSize() {
-            // Can be used if lot size needs specific UI prompt
-        }
+        function updateLotSize() {}
 
         function addTrade(e) {
             e.preventDefault();
@@ -546,18 +572,28 @@
 
         // Save Settings
         function saveSettings() {
+            const newUid = document.getElementById('setting-user-id').value.trim();
+            const newPass = document.getElementById('setting-password').value.trim();
+
+            if(newUid) appState.userId = newUid;
+            if(newPass) appState.password = newPass;
+
             appState.initialCapital = parseFloat(document.getElementById('setting-initial-capital').value) || 50000;
             appState.dailyLossLimit = parseFloat(document.getElementById('setting-loss-limit').value) || 2000;
             appState.dbUrl = document.getElementById('setting-db-url').value;
 
             localStorage.setItem('trading_tracker_settings', JSON.stringify({
+                userId: appState.userId,
+                password: appState.password,
                 initialCapital: appState.initialCapital,
                 dailyLossLimit: appState.dailyLossLimit,
                 dbUrl: appState.dbUrl
             }));
 
+            document.getElementById('sidebar-username').innerText = appState.userId;
+
             const status = document.getElementById('settings-save-status');
-            status.innerText = "Settings saved successfully!";
+            status.innerText = "Settings & Credentials updated successfully!";
             status.className = "text-xs text-emerald-400 font-medium";
             setTimeout(() => {
                 status.innerText = "Settings are saved locally & synced.";
