@@ -1,220 +1,259 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trading Tracker Pro - Anurag Patel</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --border-color: #334155;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --primary: #6366f1;
+            --primary-hover: #4f46e5;
         }
-    </script>
+        body.light-mode {
+            --bg-main: #f8fafc;
+            --bg-card: #ffffff;
+            --border-color: #cbd5e1;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; transition: background 0.3s, color 0.3s; }
+        .hidden { display: none !important; }
+        
+        /* Layout */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .justify-between { justify-content: space-between; }
+        .items-center { align-items: center; }
+        .gap-4 { gap: 1rem; }
+        .gap-3 { gap: 0.75.rem; }
+        .grid { display: grid; }
+        .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+        .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+        .col-span-2 { grid-column: span 2 / span 2; }
+        
+        @media (max-width: 1024px) {
+            .grid-cols-4, .grid-cols-3 { grid-template-columns: 1fr; }
+            .col-span-2 { grid-column: span 1; }
+        }
+
+        /* Components */
+        .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .btn { padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
+        .btn-primary { background-color: var(--primary); color: white; width: 100%; justify-content: center; padding: 0.75rem; }
+        .btn-primary:hover { background-color: var(--primary-hover); }
+        .input-field { width: 100%; padding: 0.625rem; background-color: var(--bg-main); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); font-size: 0.875rem; margin-top: 0.25rem; }
+        .input-field:focus { outline: 2px solid var(--primary); }
+        label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem; }
+        
+        /* Table */
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th, td { padding: 0.875rem; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
+        th { background-color: rgba(0,0,0,0.2); color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; }
+        
+        /* Badges & Colors */
+        .text-emerald { color: #34d399; }
+        .text-rose { color: #f87171; }
+        .text-amber { color: #fbbf24; }
+        .badge { padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.75rem; font-weight: bold; }
+        .badge-win { background-color: rgba(52, 211, 153, 0.2); color: #34d399; }
+        .badge-loss { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
+        .badge-be { background-color: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    </style>
 </head>
-<body class="bg-slate-900 dark:bg-slate-900 text-slate-100 transition-colors duration-300 font-sans min-h-screen">
+<body>
 
     <!-- LOGIN SCREEN -->
-    <div id="loginScreen" class="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950">
-        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl shadow-2xl w-full max-w-md">
-            <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600/20 text-indigo-400 rounded-full mb-3 text-2xl font-bold">
+    <div id="loginScreen" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem;">
+        <div class="card" style="width: 100%; max-width: 400px;">
+            <div style="text-align: center; margin-bottom: 1.5rem;">
+                <div style="width: 60px; height: 60px; background: rgba(99,102,241,0.2); color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 0.75rem;">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
-                <h1 class="text-2xl font-bold text-white">Trading Tracker Pro</h1>
-                <p class="text-slate-400 text-sm mt-1">Managed by Anurag Patel</p>
+                <h2>Trading Tracker Pro</h2>
+                <p style="color: var(--text-muted); font-size: 0.875rem; margin-top: 0.25rem;">Managed by Anurag Patel</p>
             </div>
-            <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+            <form onsubmit="handleLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">Trader Name</label>
-                    <input type="text" id="usernameInput" required value="Anurag Patel" class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <label>Trader Name</label>
+                    <input type="text" id="usernameInput" required value="Anurag Patel" class="input-field">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-slate-300 mb-1">Passcode / PIN</label>
-                    <input type="password" id="pinInput" placeholder="Enter PIN (e.g. 1234)" required class="w-full px-4 py-2.5 bg-slate-900 border border-slate-700 rounded-lg text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    <label>Passcode / PIN</label>
+                    <input type="password" id="pinInput" placeholder="Enter PIN (e.g. 1234)" required class="input-field">
                 </div>
-                <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-lg transition duration-200 shadow-lg shadow-indigo-600/30">
-                    Access Dashboard
-                </button>
+                <button type="submit" class="btn btn-primary">Access Dashboard</button>
             </form>
         </div>
     </div>
 
     <!-- MAIN DASHBOARD -->
-    <div id="dashboardApp" class="hidden min-h-screen flex flex-col">
+    <div id="dashboardApp" class="hidden" style="min-height: 100vh; display: flex; flex-direction: column;">
         <!-- Header -->
-        <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50 px-6 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-lg">
+        <header style="background-color: var(--bg-card); border-bottom: 1px solid var(--border-color); padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 50;">
+            <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="width: 40px; height: 40px; background-color: var(--primary); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
                 <div>
-                    <h2 class="text-lg font-bold text-white leading-tight">Trading Tracker</h2>
-                    <span class="text-xs text-indigo-400 font-medium">Anurag Patel's Portfolio</span>
+                    <h3 style="font-size: 1rem; font-weight: bold;">Trading Tracker</h3>
+                    <span style="font-size: 0.75rem; color: var(--primary);">Anurag Patel's Portfolio</span>
                 </div>
             </div>
-            <div class="flex items-center space-x-3">
-                <!-- Theme Switcher Button -->
-                <button onclick="toggleTheme()" class="px-3 py-2 bg-amber-500/20 text-amber-400 hover:bg-amber-500 hover:text-white rounded-lg text-sm font-medium transition flex items-center space-x-2">
-                    <i class="fa-solid fa-sun" id="themeIcon"></i>
-                    <span id="themeText">Light Mode</span>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <button onclick="toggleTheme()" class="btn" style="background: rgba(251,191,36,0.2); color: #fbbf24;">
+                    <i class="fa-solid fa-sun" id="themeIcon"></i> <span id="themeText">Light Mode</span>
                 </button>
-                <button onclick="exportData()" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-slate-200 rounded-lg text-sm font-medium transition flex items-center space-x-2">
-                    <i class="fa-solid fa-download"></i><span>Export CSV</span>
+                <button onclick="exportData()" class="btn" style="background: var(--border-color); color: var(--text-main);">
+                    <i class="fa-solid fa-download"></i> Export CSV
                 </button>
-                <button onclick="handleLogout()" class="px-3 py-2 bg-rose-600/20 text-rose-400 hover:bg-rose-600 hover:text-white rounded-lg text-sm font-medium transition flex items-center space-x-2">
-                    <i class="fa-solid fa-right-from-bracket"></i><span>Logout</span>
+                <button onclick="handleLogout()" class="btn" style="background: rgba(248,113,113,0.2); color: #f87171;">
+                    <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </button>
             </div>
         </header>
 
         <!-- Main Content -->
-        <main class="flex-1 max-w-7xl w-full mx-auto p-6 space-y-6">
+        <main style="max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; flex: 1;">
             
-            <!-- Metrics Summary Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow">
-                    <p class="text-slate-400 text-sm font-medium">Total Net P&L</p>
-                    <h3 id="totalPnL" class="text-2xl font-bold mt-1 text-slate-100">₹0.00</h3>
-                    <span id="pnlBadge" class="text-xs px-2 py-0.5 rounded mt-2 inline-block bg-slate-700 text-slate-300">Neutral</span>
+            <!-- Summary Cards -->
+            <div class="grid grid-cols-4" style="gap: 1rem;">
+                <div class="card">
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Total Net P&L</p>
+                    <h3 id="totalPnL" style="font-size: 1.5rem; font-weight: bold; margin-top: 0.25rem;">₹0.00</h3>
                 </div>
-                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow">
-                    <p class="text-slate-400 text-sm font-medium">Win Rate</p>
-                    <h3 id="winRate" class="text-2xl font-bold mt-1 text-slate-100">0%</h3>
-                    <span class="text-xs text-slate-400 mt-2 inline-block"><span id="winCount">0</span> Wins / <span id="lossCount">0</span> Losses</span>
+                <div class="card">
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Win Rate</p>
+                    <h3 id="winRate" style="font-size: 1.5rem; font-weight: bold; margin-top: 0.25rem;">0%</h3>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);"><span id="winCount">0</span> Wins / <span id="lossCount">0</span> Losses</span>
                 </div>
-                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow">
-                    <p class="text-slate-400 text-sm font-medium">Total Trades</p>
-                    <h3 id="totalTrades" class="text-2xl font-bold mt-1 text-slate-100">0</h3>
-                    <span class="text-xs text-indigo-400 mt-2 inline-block">Active Log</span>
+                <div class="card">
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Total Trades</p>
+                    <h3 id="totalTrades" style="font-size: 1.5rem; font-weight: bold; margin-top: 0.25rem;">0</h3>
                 </div>
-                <div class="bg-slate-800 border border-slate-700 p-5 rounded-xl shadow">
-                    <p class="text-slate-400 text-sm font-medium">Avg Risk-Reward (RRR)</p>
-                    <h3 id="avgRRR" class="text-2xl font-bold mt-1 text-slate-100">1 : 0.0</h3>
-                    <span class="text-xs text-slate-400 mt-2 inline-block">Risk vs Reward Ratio</span>
+                <div class="card">
+                    <p style="color: var(--text-muted); font-size: 0.875rem;">Avg Risk-Reward</p>
+                    <h3 id="avgRRR" style="font-size: 1.5rem; font-weight: bold; margin-top: 0.25rem;">1 : 0.0</h3>
                 </div>
             </div>
 
             <!-- Form & Chart Section -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Trade Add Form -->
-                <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow lg:col-span-1">
-                    <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
-                        <i class="fa-solid fa-plus-circle text-indigo-500"></i><span>Add New Trade</span>
+            <div class="grid grid-cols-3" style="gap: 1.5rem;">
+                <!-- Form -->
+                <div class="card">
+                    <h3 style="font-size: 1rem; font-weight: bold; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
+                        <i class="fa-solid fa-plus-circle text-emerald"></i> Add New Trade
                     </h3>
-                    <form id="tradeForm" onsubmit="addTrade(event)" class="space-y-3">
+                    <form onsubmit="addTrade(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Asset Symbol</label>
-                            <input type="text" id="tradeAsset" placeholder="e.g. NIFTY, BANKNIFTY, BTC" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <label>Asset Symbol</label>
+                            <input type="text" id="tradeAsset" placeholder="e.g. NIFTY, BANKNIFTY" required class="input-field">
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2" style="gap: 0.5rem;">
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Type</label>
-                                <select id="tradeType" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <label>Type</label>
+                                <select id="tradeType" class="input-field">
                                     <option value="BUY">BUY / LONG</option>
                                     <option value="SELL">SELL / SHORT</option>
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Status</label>
-                                <select id="tradeStatus" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <label>Status</label>
+                                <select id="tradeStatus" class="input-field">
                                     <option value="WIN">WIN</option>
                                     <option value="LOSS">LOSS</option>
                                     <option value="BE">BREAKEVEN</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="grid grid-cols-2 gap-3">
+                        <div class="grid grid-cols-2" style="gap: 0.5rem;">
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Entry Price (₹)</label>
-                                <input type="number" step="any" id="tradeEntry" placeholder="0.00" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <label>Entry Price (₹)</label>
+                                <input type="number" step="any" id="tradeEntry" placeholder="0.00" required class="input-field">
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Exit Price (₹)</label>
-                                <input type="number" step="any" id="tradeExit" placeholder="0.00" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Stop Loss Price (₹)</label>
-                                <input type="number" step="any" id="tradeSL" placeholder="0.00" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-medium text-slate-300 mb-1">Quantity</label>
-                                <input type="number" id="tradeQty" placeholder="1" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <label>Exit Price (₹)</label>
+                                <input type="number" step="any" id="tradeExit" placeholder="0.00" required class="input-field">
                             </div>
                         </div>
-                        <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Date</label>
-                            <input type="date" id="tradeDate" required class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <div class="grid grid-cols-2" style="gap: 0.5rem;">
+                            <div>
+                                <label>Stop Loss (₹)</label>
+                                <input type="number" step="any" id="tradeSL" placeholder="0.00" class="input-field">
+                            </div>
+                            <div>
+                                <label>Quantity</label>
+                                <input type="number" id="tradeQty" placeholder="1" required class="input-field">
+                            </div>
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-300 mb-1">Notes / Strategy</label>
-                            <input type="text" id="tradeNotes" placeholder="e.g. Price Action Breakout" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-sm text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                            <label>Date</label>
+                            <input type="date" id="tradeDate" required class="input-field">
                         </div>
-                        <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-lg transition shadow-md shadow-indigo-600/20">
-                            Save Trade
-                        </button>
+                        <div>
+                            <label>Notes / Strategy</label>
+                            <input type="text" id="tradeNotes" placeholder="e.g. Breakout setup" class="input-field">
+                        </div>
+                        <button type="submit" class="btn btn-primary" style="margin-top: 0.5rem;">Save Trade</button>
                     </form>
                 </div>
 
-                <!-- Cumulative P&L Chart -->
-                <div class="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow lg:col-span-2 flex flex-col justify-between">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-chart-area text-indigo-500"></i><span>Cumulative P&L Curve</span>
-                        </h3>
-                        <button onclick="clearAllTrades()" class="text-xs text-rose-400 hover:text-rose-300 transition underline">Clear All Trades</button>
+                <!-- Chart -->
+                <div class="card col-span-2" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h3 style="font-size: 1rem; font-weight: bold;"><i class="fa-solid fa-chart-area text-emerald"></i> Cumulative P&L Curve</h3>
+                        <button onclick="clearAllTrades()" style="background:none; border:none; color: #f87171; cursor:pointer; font-size: 0.75rem;">Clear All</button>
                     </div>
-                    <div class="relative h-64 w-full flex items-center justify-center">
+                    <div style="position: relative; height: 260px; width: 100%;">
                         <canvas id="pnlChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <!-- Trade History & Filters -->
-            <div class="bg-slate-800 border border-slate-700 rounded-xl shadow overflow-hidden">
-                <div class="p-5 border-b border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
-                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                        <i class="fa-solid fa-list text-indigo-500"></i><span>Trade Journal & History</span>
-                    </h3>
-                    <div class="flex items-center space-x-2">
-                        <button onclick="filterTrades('ALL')" class="px-2.5 py-1 bg-indigo-600 text-xs text-white rounded-md">All</button>
-                        <button onclick="filterTrades('WIN')" class="px-2.5 py-1 bg-emerald-600/20 text-emerald-400 text-xs rounded-md">Wins</button>
-                        <button onclick="filterTrades('LOSS')" class="px-2.5 py-1 bg-rose-600/20 text-rose-400 text-xs rounded-md">Losses</button>
+            <!-- Table Section -->
+            <div class="card" style="padding: 0; overflow: hidden;">
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="font-size: 1rem; font-weight: bold;"><i class="fa-solid fa-list text-emerald"></i> Trade History</h3>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button onclick="filterTrades('ALL')" class="btn" style="padding: 0.25rem 0.75rem; background: var(--primary); color: white;">All</button>
+                        <button onclick="filterTrades('WIN')" class="btn" style="padding: 0.25rem 0.75rem; background: rgba(52,211,153,0.2); color: #34d399;">Wins</button>
+                        <button onclick="filterTrades('LOSS')" class="btn" style="padding: 0.25rem 0.75rem; background: rgba(248,113,113,0.2); color: #f87171;">Losses</button>
                     </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
+                <div style="overflow-x: auto;">
+                    <table>
                         <thead>
-                            <tr class="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
-                                <th class="p-3.5">Date</th>
-                                <th class="p-3.5">Asset</th>
-                                <th class="p-3.5">Type</th>
-                                <th class="p-3.5">Qty</th>
-                                <th class="p-3.5">Entry</th>
-                                <th class="p-3.5">Exit</th>
-                                <th class="p-3.5">Risk/Reward</th>
-                                <th class="p-3.5">P&L (₹)</th>
-                                <th class="p-3.5">Status</th>
-                                <th class="p-3.5">Notes</th>
-                                <th class="p-3.5 text-center">Action</th>
+                            <tr>
+                                <th>Date</th>
+                                <th>Asset</th>
+                                <th>Type</th>
+                                <th>Qty</th>
+                                <th>Entry</th>
+                                <th>Exit</th>
+                                <th>R:R</th>
+                                <th>P&L (₹)</th>
+                                <th>Status</th>
+                                <th>Notes</th>
+                                <th style="text-align: center;">Action</th>
                             </tr>
                         </thead>
-                        <tbody id="tradeTableBody" class="divide-y divide-slate-700 text-sm">
-                            <tr>
-                                <td colspan="11" class="text-center py-6 text-slate-500">No trades recorded yet. Add your first trade above!</td>
-                            </tr>
+                        <tbody id="tradeTableBody">
+                            <tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 2rem;">No trades recorded yet.</td></tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-
         </main>
     </div>
 
-    <!-- Script -->
+    <!-- Script Logic -->
     <script>
         let trades = JSON.parse(localStorage.getItem('anurag_trading_tracker_data')) || [];
         let activeFilter = 'ALL';
@@ -223,17 +262,15 @@
         document.getElementById('tradeDate').valueAsDate = new Date();
 
         function toggleTheme() {
-            document.documentElement.classList.toggle('dark');
-            const isDark = document.documentElement.classList.contains('dark');
-            document.getElementById('themeText').innerText = isDark ? 'Light Mode' : 'Dark Mode';
-            document.getElementById('themeIcon').className = isDark ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            document.getElementById('themeText').innerText = isLight ? 'Dark Mode' : 'Light Mode';
+            document.getElementById('themeIcon').className = isLight ? 'fa-solid fa-moon' : 'fa-solid fa-sun';
         }
 
         function handleLogin(e) {
             e.preventDefault();
-            const username = document.getElementById('usernameInput').value;
-            const pin = document.getElementById('pinInput').value;
-            if(pin.trim() !== "") {
+            if(document.getElementById('pinInput').value.trim() !== "") {
                 localStorage.setItem('anurag_logged_in', 'true');
                 checkAuth();
             }
@@ -245,8 +282,7 @@
         }
 
         function checkAuth() {
-            const isLoggedIn = localStorage.getItem('anurag_logged_in');
-            if(isLoggedIn === 'true') {
+            if(localStorage.getItem('anurag_logged_in') === 'true') {
                 document.getElementById('loginScreen').classList.add('hidden');
                 document.getElementById('dashboardApp').classList.remove('hidden');
                 renderDashboard();
@@ -269,14 +305,11 @@
             const notes = document.getElementById('tradeNotes').value;
 
             let pnl = type === 'BUY' ? (exit - entry) * qty : (entry - exit) * qty;
-            
-            // RRR Calculation
             let risk = Math.abs(entry - sl);
             let reward = Math.abs(exit - entry);
             let rrr = risk > 0 ? (reward / risk).toFixed(1) : '1.0';
 
-            const newTrade = { id: Date.now(), asset, type, status, entry, exit, sl, qty, date, notes, pnl, rrr };
-            trades.push(newTrade);
+            trades.push({ id: Date.now(), asset, type, status, entry, exit, sl, qty, date, notes, pnl, rrr });
             saveAndRender();
             document.getElementById('tradeForm').reset();
             document.getElementById('tradeDate').valueAsDate = new Date();
@@ -293,10 +326,7 @@
         }
 
         function clearAllTrades() {
-            if(confirm('Are you sure you want to delete all trades?')) {
-                trades = [];
-                saveAndRender();
-            }
+            if(confirm('Delete all trades?')) { trades = []; saveAndRender(); }
         }
 
         function saveAndRender() {
@@ -306,103 +336,76 @@
 
         function renderDashboard() {
             const tbody = document.getElementById('tradeTableBody');
-            let filtered = trades;
-            if(activeFilter !== 'ALL') {
-                filtered = trades.filter(t => t.status === activeFilter);
-            }
+            let filtered = activeFilter === 'ALL' ? trades : trades.filter(t => t.status === activeFilter);
 
             if(filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="11" class="text-center py-6 text-slate-500">No trades match this filter.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 2rem;">No trades found.</td></tr>`;
             } else {
                 tbody.innerHTML = filtered.slice().reverse().map(t => `
-                    <tr class="hover:bg-slate-750 transition border-b border-slate-700/50">
-                        <td class="p-3.5 text-slate-300">${t.date}</td>
-                        <td class="p-3.5 font-bold text-white">${t.asset}</td>
-                        <td class="p-3.5"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'BUY' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'}">${t.type}</span></td>
-                        <td class="p-3.5 text-slate-300">${t.qty}</td>
-                        <td class="p-3.5 text-slate-300">₹${t.entry.toFixed(2)}</td>
-                        <td class="p-3.5 text-slate-300">₹${t.exit.toFixed(2)}</td>
-                        <td class="p-3.5 text-slate-300 font-mono">1:${t.rrr || '1'}</td>
-                        <td class="p-3.5 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}">₹${t.pnl.toFixed(2)}</td>
-                        <td class="p-3.5"><span class="px-2 py-0.5 rounded text-xs font-bold ${t.status === 'WIN' ? 'bg-emerald-500/20 text-emerald-400' : t.status === 'LOSS' ? 'bg-rose-500/20 text-rose-400' : 'bg-amber-500/20 text-amber-400'}">${t.status}</span></td>
-                        <td class="p-3.5 text-slate-400 italic">${t.notes || '-'}</td>
-                        <td class="p-3.5 text-center">
-                            <button onclick="deleteTrade(${t.id})" class="text-rose-400 hover:text-rose-300"><i class="fa-solid fa-trash-can"></i></button>
-                        </td>
+                    <tr>
+                        <td style="color: var(--text-muted);">${t.date}</td>
+                        <td style="font-weight: bold;">${t.asset}</td>
+                        <td><span class="badge ${t.type === 'BUY' ? 'badge-win' : 'badge-loss'}">${t.type}</span></td>
+                        <td>${t.qty}</td>
+                        <td>₹${t.entry.toFixed(2)}</td>
+                        <td>₹${t.exit.toFixed(2)}</td>
+                        <td>1:${t.rrr}</td>
+                        <td style="font-weight: bold;" class="${t.pnl >= 0 ? 'text-emerald' : 'text-rose'}">₹${t.pnl.toFixed(2)}</td>
+                        <td><span class="badge ${t.status === 'WIN' ? 'badge-win' : t.status === 'LOSS' ? 'badge-loss' : 'badge-be'}">${t.status}</span></td>
+                        <td style="color: var(--text-muted); font-style: italic;">${t.notes || '-'}</td>
+                        <td style="text-align: center;"><button onclick="deleteTrade(${t.id})" style="background:none; border:none; color: #f87171; cursor:pointer;"><i class="fa-solid fa-trash-can"></i></button></td>
                     </tr>
                 `).join('');
             }
 
-            // Calculations
             let totalPnL = trades.reduce((acc, curr) => acc + curr.pnl, 0);
             let wins = trades.filter(t => t.status === 'WIN').length;
-            let losses = trades.filter(t => t.status === 'LOSS').length;
-            let winRateVal = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-            
-            let avgRRRVal = trades.length > 0 ? (trades.reduce((acc, t) => acc + parseFloat(t.rrr || 1), 0) / trades.length).toFixed(1) : '0.0';
+            let winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
+            let avgRRR = trades.length > 0 ? (trades.reduce((acc, t) => acc + parseFloat(t.rrr), 0) / trades.length).toFixed(1) : '0.0';
 
             document.getElementById('totalPnL').innerText = `₹${totalPnL.toFixed(2)}`;
-            document.getElementById('totalPnL').className = `text-2xl font-bold mt-1 ${totalPnL >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
-            document.getElementById('winRate').innerText = `${winRateVal}%`;
+            document.getElementById('totalPnL').className = totalPnL >= 0 ? 'text-emerald' : 'text-rose';
+            document.getElementById('winRate').innerText = `${winRate}%`;
             document.getElementById('winCount').innerText = wins;
-            document.getElementById('lossCount').innerText = losses;
+            document.getElementById('lossCount').innerText = trades.filter(t => t.status === 'LOSS').length;
             document.getElementById('totalTrades').innerText = trades.length;
-            document.getElementById('avgRRR').innerText = `1 : ${avgRRRVal}`;
+            document.getElementById('avgRRR').innerText = `1 : ${avgRRR}`;
 
             renderChart();
         }
 
         function renderChart() {
             const ctx = document.getElementById('pnlChart').getContext('2d');
-            let cumulative = 0;
-            let labels = ['Start'];
-            let dataPoints = [0];
-
-            trades.forEach((t, index) => {
-                cumulative += t.pnl;
-                labels.push(`T${index + 1}`);
-                dataPoints.push(cumulative);
-            });
+            let cumulative = 0, labels = ['Start'], dataPoints = [0];
+            trades.forEach((t, i) => { cumulative += t.pnl; labels.push(`T${i+1}`); dataPoints.push(cumulative); });
 
             if(pnlChartInstance) pnlChartInstance.destroy();
-
             pnlChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Cumulative P&L (₹)',
+                        label: 'Cumulative P&L',
                         data: dataPoints,
                         borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.15)',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
                         borderWidth: 2,
                         fill: true,
                         tension: 0.3
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        x: { grid: { color: 'rgba(255, 255, 255, 0.05)' } },
-                        y: { grid: { color: 'rgba(255, 255, 255, 0.05)' } }
-                    }
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
             });
         }
 
         function exportData() {
-            if(trades.length === 0) return alert('No trades available to export.');
+            if(trades.length === 0) return alert('No trades to export.');
             let csv = 'Date,Asset,Type,Quantity,Entry,Exit,P&L,Status,Notes\n';
-            trades.forEach(t => {
-                csv += `${t.date},${t.asset},${t.type},${t.qty},${t.entry},${t.exit},${t.pnl},${t.status},"${t.notes || ''}"\n`;
-            });
+            trades.forEach(t => csv += `${t.date},${t.asset},${t.type},${t.qty},${t.entry},${t.exit},${t.pnl},${t.status},"${t.notes || ''}"\n`);
             const blob = new Blob([csv], { type: 'text/csv;' });
-            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.href = url;
-            a.download = `Trading_Journal_${new Date().toISOString().slice(0,10)}.csv`;
+            a.href = URL.createObjectURL(blob);
+            a.download = `Trading_Journal.csv`;
             a.click();
         }
 
