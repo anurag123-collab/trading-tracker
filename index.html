@@ -101,6 +101,9 @@
                     <button onclick="switchTab('trades')" id="nav-trades" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition">
                         <i class="fa-solid fa-list-check w-5"></i> Trade Log
                     </button>
+                    <button onclick="switchTab('capital')" id="nav-capital" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition">
+                        <i class="fa-solid fa-wallet w-5"></i> Capital Logs
+                    </button>
                     <button onclick="switchTab('recycle')" id="nav-recycle" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition">
                         <i class="fa-solid fa-trash-arrow-up w-5"></i> Recycle Bin <span id="recycle-badge" class="ml-auto bg-pink-900 text-pink-200 px-2 py-0.5 rounded-full text-xs">0</span>
                     </button>
@@ -126,7 +129,7 @@
                     <p id="current-date" class="text-pink-300 text-sm mt-0.5">Welcome back, Anurag</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <!-- Refresh Button Added Here -->
+                    <!-- Refresh Button -->
                     <button onclick="refreshData()" class="bg-pink-900 hover:bg-pink-800 text-pink-200 border border-pink-700/60 px-3.5 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2 shadow-sm">
                         <i class="fa-solid fa-rotate" id="refresh-icon"></i> Refresh Data
                     </button>
@@ -157,6 +160,51 @@
                     <div class="bg-pink-900/40 border border-pink-800/60 p-5 rounded-2xl shadow-lg">
                         <p class="text-xs font-medium text-pink-300 uppercase tracking-wider">Daily Loss Limit</p>
                         <h3 class="text-2xl font-bold text-rose-300 mt-2" id="metric-loss-limit">₹2,000</h3>
+                    </div>
+                </div>
+
+                <!-- Capital Management Actions Row -->
+                <div class="grid grid-cols-2 gap-6">
+                    <!-- Add Capital Box -->
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-6 rounded-2xl shadow-lg flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-circle-plus text-emerald-400 mr-2"></i> Add Capital</h3>
+                            <p class="text-xs text-pink-300 mb-4">Deposit extra funds into your trading account.</p>
+                        </div>
+                        <form onsubmit="handleCapitalTransaction(event, 'add')" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-pink-300 mb-1">Amount to Add (₹)</label>
+                                <input type="number" step="1" id="add-capital-amount" required placeholder="e.g. 10000" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-pink-300 mb-1">Reason / Note</label>
+                                <input type="text" id="add-capital-note" placeholder="e.g. Monthly Savings Deposit" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
+                            </div>
+                            <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-lg shadow-emerald-600/20">
+                                Confirm Deposit
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Withdraw Capital Box -->
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-6 rounded-2xl shadow-lg flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-1"><i class="fa-solid fa-circle-minus text-rose-400 mr-2"></i> Withdraw Capital</h3>
+                            <p class="text-xs text-pink-300 mb-4">Withdraw funds from your trading account balance.</p>
+                        </div>
+                        <form onsubmit="handleCapitalTransaction(event, 'withdraw')" class="space-y-3">
+                            <div>
+                                <label class="block text-xs font-medium text-pink-300 mb-1">Amount to Withdraw (₹)</label>
+                                <input type="number" step="1" id="withdraw-capital-amount" required placeholder="e.g. 5000" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-pink-300 mb-1">Reason / Note</label>
+                                <input type="text" id="withdraw-capital-note" placeholder="e.g. Profit Payout" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
+                            </div>
+                            <button type="submit" class="w-full bg-rose-600 hover:bg-rose-500 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-lg shadow-rose-600/20">
+                                Confirm Withdrawal
+                            </button>
+                        </form>
                     </div>
                 </div>
 
@@ -248,7 +296,35 @@
                 </div>
             </div>
 
-            <!-- TAB 3: RECYCLE BIN -->
+            <!-- TAB 3: CAPITAL LOGS -->
+            <div id="tab-capital" class="hidden space-y-6">
+                <div class="bg-pink-900/40 border border-pink-800/60 rounded-2xl overflow-hidden shadow-lg">
+                    <div class="p-6 border-b border-pink-800/60 flex justify-between items-center">
+                        <div>
+                            <h3 class="text-lg font-bold text-white">Capital Adjustment History</h3>
+                            <p class="text-xs text-pink-300 mt-0.5">Track all capital deposits and withdrawals.</p>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-pink-950/60 text-pink-300 text-xs uppercase tracking-wider border-b border-pink-800/60">
+                                    <th class="p-4">Date / Time</th>
+                                    <th class="p-4">Type</th>
+                                    <th class="p-4">Amount</th>
+                                    <th class="p-4">Note / Reason</th>
+                                    <th class="p-4 text-right">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="capital-table-body" class="divide-y divide-pink-900/60 text-sm">
+                                <!-- Populated dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: RECYCLE BIN -->
             <div id="tab-recycle" class="hidden space-y-6">
                 <div class="bg-pink-900/40 border border-pink-800/60 rounded-2xl overflow-hidden shadow-lg">
                     <div class="p-6 border-b border-pink-800/60 flex justify-between items-center">
@@ -281,7 +357,7 @@
                 </div>
             </div>
 
-            <!-- TAB 4: SETTINGS -->
+            <!-- TAB 5: SETTINGS -->
             <div id="tab-settings" class="hidden space-y-6 max-w-2xl">
                 <div class="bg-pink-900/40 border border-pink-800/60 p-6 rounded-2xl space-y-6 shadow-lg">
                     <div>
@@ -306,7 +382,7 @@
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-pink-300 mb-1">Initial Capital (₹)</label>
+                            <label class="block text-xs font-medium text-pink-300 mb-1">Base Initial Capital (₹)</label>
                             <input type="number" id="setting-initial-capital" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-pink-500">
                         </div>
                         <div>
@@ -348,7 +424,8 @@
             dailyLossLimit: 2000,
             dbUrl: 'https://trading-tracker-f6400-default-rtdb.asia-southeast1.firebasedatabase.app/',
             trades: [],
-            recycleBin: []
+            recycleBin: [],
+            capitalLogs: []
         };
 
         let equityChartInstance = null;
@@ -408,13 +485,13 @@
             const icon = document.getElementById('refresh-icon');
             icon.classList.add('fa-spin');
             
-            // Reload local or trigger sync fetch
             if(dbRef) {
                 dbRef.once('value').then((snapshot) => {
                     const data = snapshot.val();
                     if(data) {
                         appState.trades = data.trades || [];
                         appState.recycleBin = data.recycleBin || [];
+                        appState.capitalLogs = data.capitalLogs || [];
                     }
                     updateUI();
                     setTimeout(() => icon.classList.remove('fa-spin'), 600);
@@ -457,18 +534,21 @@
 
         // Tab Switching
         function switchTab(tabId) {
-            ['dashboard', 'trades', 'recycle', 'settings'].forEach(t => {
-                document.getElementById(`tab-${t}`).classList.add('hidden');
+            ['dashboard', 'trades', 'capital', 'recycle', 'settings'].forEach(t => {
+                const tabEl = document.getElementById(`tab-${t}`);
+                if(tabEl) tabEl.classList.add('hidden');
                 const navBtn = document.getElementById(`nav-${t}`);
-                navBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition";
+                if(navBtn) navBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition";
             });
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const targetTab = document.getElementById(`tab-${tabId}`);
+            if(targetTab) targetTab.classList.remove('hidden');
             const activeBtn = document.getElementById(`nav-${tabId}`);
-            activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-pink-600 text-white transition";
+            if(activeBtn) activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-pink-600 text-white transition";
             
             const titles = {
                 'dashboard': 'Dashboard Overview',
                 'trades': 'Trade Log History',
+                'capital': 'Capital Logs & History',
                 'recycle': 'Recycle Bin',
                 'settings': 'Application Settings'
             };
@@ -502,6 +582,7 @@
                     if(data) {
                         appState.trades = data.trades || [];
                         appState.recycleBin = data.recycleBin || [];
+                        appState.capitalLogs = data.capitalLogs || [];
                     }
                     updateUI();
                 }, (error) => {
@@ -522,20 +603,75 @@
         function loadLocalFallback() {
             const localTrades = localStorage.getItem('trading_tracker_trades');
             const localRecycle = localStorage.getItem('trading_tracker_recycle');
+            const localCapital = localStorage.getItem('trading_tracker_capital');
             if(localTrades) appState.trades = JSON.parse(localTrades);
             if(localRecycle) appState.recycleBin = JSON.parse(localRecycle);
+            if(localCapital) appState.capitalLogs = JSON.parse(localCapital);
             updateUI();
         }
 
         function saveDataToDB() {
             localStorage.setItem('trading_tracker_trades', JSON.stringify(appState.trades));
             localStorage.setItem('trading_tracker_recycle', JSON.stringify(appState.recycleBin));
+            localStorage.setItem('trading_tracker_capital', JSON.stringify(appState.capitalLogs));
             if(dbRef) {
                 dbRef.set({
                     trades: appState.trades,
-                    recycleBin: appState.recycleBin
+                    recycleBin: appState.recycleBin,
+                    capitalLogs: appState.capitalLogs
                 }).catch(err => console.log("Cloud sync error:", err));
             }
+        }
+
+        // Capital Transactions Handler (Add / Withdraw)
+        function handleCapitalTransaction(e, type) {
+            e.preventDefault();
+            const amountInput = document.getElementById(type === 'add' ? 'add-capital-amount' : 'withdraw-capital-amount');
+            const noteInput = document.getElementById(type === 'add' ? 'add-capital-note' : 'withdraw-capital-note');
+            
+            const amount = parseFloat(amountInput.value);
+            const note = noteInput.value.trim() || (type === 'add' ? 'Capital Deposit' : 'Capital Withdrawal');
+
+            if(!amount || amount <= 0) return;
+
+            // Check if withdrawal exceeds current available capital
+            if(type === 'withdraw') {
+                let totalPnl = 0;
+                appState.trades.forEach(t => totalPnl += t.pnl);
+                let netAddedCapital = 0;
+                appState.capitalLogs.forEach(c => {
+                    if(c.type === 'ADD') netAddedCapital += c.amount;
+                    else netAddedCapital -= c.amount;
+                });
+                const currentCap = appState.initialCapital + netAddedCapital + totalPnl;
+
+                if(amount > currentCap) {
+                    alert('Withdrawal amount cannot exceed your current total capital!');
+                    return;
+                }
+            }
+
+            const logEntry = {
+                id: 'cap_' + Date.now(),
+                date: new Date().toLocaleString(),
+                type: type === 'add' ? 'ADD' : 'WITHDRAW',
+                amount: amount,
+                note: note
+            };
+
+            appState.capitalLogs.unshift(logEntry);
+            saveDataToDB();
+            updateUI();
+
+            amountInput.value = '';
+            noteInput.value = '';
+            alert(type === 'add' ? 'Capital successfully added!' : 'Capital successfully withdrawn!');
+        }
+
+        function deleteCapitalLog(id) {
+            appState.capitalLogs = appState.capitalLogs.filter(c => c.id !== id);
+            saveDataToDB();
+            updateUI();
         }
 
         function addTrade(e) {
@@ -643,9 +779,16 @@
             let totalPnl = 0;
             appState.trades.forEach(t => totalPnl += t.pnl);
 
-            const currentCap = appState.initialCapital + totalPnl;
+            let netAddedCapital = 0;
+            appState.capitalLogs.forEach(c => {
+                if(c.type === 'ADD') netAddedCapital += c.amount;
+                else netAddedCapital -= c.amount;
+            });
 
-            document.getElementById('metric-initial-cap').innerText = `₹${appState.initialCapital.toLocaleString('en-IN')}`;
+            const effectiveInitialCap = appState.initialCapital + netAddedCapital;
+            const currentCap = effectiveInitialCap + totalPnl;
+
+            document.getElementById('metric-initial-cap').innerText = `₹${effectiveInitialCap.toLocaleString('en-IN')}`;
             document.getElementById('metric-current-cap').innerText = `₹${currentCap.toLocaleString('en-IN')}`;
             
             const pnlEl = document.getElementById('metric-total-pnl');
@@ -655,6 +798,7 @@
             document.getElementById('metric-loss-limit').innerText = `₹${appState.dailyLossLimit.toLocaleString('en-IN')}`;
             document.getElementById('recycle-badge').innerText = appState.recycleBin.length;
 
+            // Trades table render
             const tbody = document.getElementById('trades-table-body');
             tbody.innerHTML = '';
             if(appState.trades.length === 0) {
@@ -683,6 +827,31 @@
             }
             document.getElementById('trade-count').innerText = `${appState.trades.length} Trades`;
 
+            // Capital Logs table render
+            const capTbody = document.getElementById('capital-table-body');
+            capTbody.innerHTML = '';
+            if(appState.capitalLogs.length === 0) {
+                capTbody.innerHTML = `<tr><td colspan="5" class="p-8 text-center text-pink-400/60">No capital history records found.</td></tr>`;
+            } else {
+                appState.capitalLogs.forEach(c => {
+                    const row = document.createElement('tr');
+                    row.className = "hover:bg-pink-900/30 transition";
+                    row.innerHTML = `
+                        <td class="p-4 text-pink-300 text-xs">${c.date}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${c.type === 'ADD' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-300 border border-rose-500/20'}">${c.type === 'ADD' ? 'DEPOSIT' : 'WITHDRAWAL'}</span></td>
+                        <td class="p-4 font-semibold ${c.type === 'ADD' ? 'text-emerald-400' : 'text-rose-300'}">${c.type === 'ADD' ? '+' : '-'}₹${c.amount.toLocaleString('en-IN')}</td>
+                        <td class="p-4 text-pink-300 text-xs">${c.note}</td>
+                        <td class="p-4 text-right">
+                            <button onclick="deleteCapitalLog('${c.id}')" class="text-pink-400 hover:text-red-300 transition p-1" title="Delete Log">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </td>
+                    `;
+                    capTbody.appendChild(row);
+                });
+            }
+
+            // Recycle bin render
             const recTbody = document.getElementById('recycle-table-body');
             recTbody.innerHTML = '';
             if(appState.recycleBin.length === 0) {
@@ -721,6 +890,8 @@
             const labels = ['Start'];
             const dataPoints = [runningCap];
 
+            // Combine capital deposits/withdrawals and trades in chronological order if needed, 
+            // or step through trades history for equity curve graph.
             const chronologicalTrades = [...appState.trades].reverse();
             chronologicalTrades.forEach((t, i) => {
                 runningCap += t.pnl;
