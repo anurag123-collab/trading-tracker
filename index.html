@@ -18,60 +18,60 @@
         body { font-family: 'Inter', sans-serif; }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-100 min-h-screen">
+<body class="bg-pink-950 text-slate-100 min-h-screen">
 
     <!-- LOGIN OVERLAY -->
-    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm">
-        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl w-96 shadow-2xl">
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-pink-950/90 backdrop-blur-sm">
+        <div class="bg-pink-900/60 border border-pink-700/60 p-8 rounded-2xl w-96 shadow-2xl">
             <div class="text-center mb-6">
-                <div class="bg-indigo-600/20 text-indigo-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                <div class="bg-pink-600/20 text-pink-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
                     <i class="fa-solid fa-chart-line"></i>
                 </div>
                 <h2 class="text-2xl font-bold text-white">Trading Tracker</h2>
-                <p class="text-slate-400 text-sm mt-1">Anurag Patel Edition</p>
+                <p class="text-pink-300 text-sm mt-1">Anurag Patel Edition</p>
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">USER ID</label>
-                    <input type="text" id="login-user" value="Anurag" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-pink-300 mb-1">USER ID</label>
+                    <input type="text" id="login-user" value="Anurag" class="w-full bg-pink-950 border border-pink-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-pink-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">PASSWORD</label>
-                    <input type="password" id="login-pass" value="12345" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-pink-300 mb-1">PASSWORD</label>
+                    <input type="password" id="login-pass" value="12345" class="w-full bg-pink-950 border border-pink-700 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-pink-500">
                 </div>
                 <div class="flex items-center justify-between text-xs">
-                    <span id="login-default-hint" class="text-slate-400">Default: Anurag / 12345</span>
-                    <button onclick="openForgotPassword()" class="text-indigo-400 hover:underline">Forgot Password?</button>
+                    <span id="login-default-hint" class="text-pink-300">Default: Anurag / 12345</span>
+                    <button onclick="openForgotPassword()" class="text-pink-300 hover:underline">Forgot Password?</button>
                 </div>
-                <button onclick="handleLogin()" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-lg transition duration-200 shadow-lg shadow-indigo-600/30">
+                <button onclick="handleLogin()" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-medium py-2.5 rounded-lg transition duration-200 shadow-lg shadow-pink-600/30">
                     Login to Dashboard
                 </button>
-                <p id="login-error" class="text-red-400 text-xs text-center hidden">Invalid Credentials</p>
+                <p id="login-error" class="text-red-300 text-xs text-center hidden">Invalid Credentials or Fields Empty</p>
             </div>
         </div>
     </div>
 
     <!-- FORGOT PASSWORD MODAL -->
-    <div id="forgot-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm hidden">
-        <div class="bg-slate-800 border border-slate-700 p-8 rounded-2xl w-96 shadow-2xl">
+    <div id="forgot-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-pink-950/90 backdrop-blur-sm hidden">
+        <div class="bg-pink-900/60 border border-pink-700/60 p-8 rounded-2xl w-96 shadow-2xl">
             <div class="text-center mb-6">
-                <div class="bg-amber-600/20 text-amber-400 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
+                <div class="bg-pink-600/20 text-pink-300 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl">
                     <i class="fa-solid fa-key"></i>
                 </div>
                 <h2 class="text-xl font-bold text-white">Reset Password</h2>
-                <p class="text-slate-400 text-xs mt-1">Enter your registered User ID to recover credentials</p>
+                <p class="text-pink-300 text-xs mt-1">Enter your registered User ID to recover credentials</p>
             </div>
             <div class="space-y-4">
                 <div>
-                    <label class="block text-xs font-medium text-slate-400 mb-1">USER ID</label>
-                    <input type="text" id="forgot-user" placeholder="Enter User ID" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-pink-300 mb-1">USER ID</label>
+                    <input type="text" id="forgot-user" placeholder="Enter User ID" class="w-full bg-pink-950 border border-pink-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-pink-500">
                 </div>
-                <p id="forgot-msg" class="text-xs text-center text-slate-400 hidden"></p>
+                <p id="forgot-msg" class="text-xs text-center text-pink-300 hidden"></p>
                 <div class="flex gap-3 pt-2">
-                    <button onclick="closeForgotPassword()" class="w-1/2 bg-slate-700 hover:bg-slate-600 text-white font-medium py-2 rounded-lg text-sm transition">
+                    <button onclick="closeForgotPassword()" class="w-1/2 bg-pink-800 hover:bg-pink-700 text-white font-medium py-2 rounded-lg text-sm transition">
                         Cancel
                     </button>
-                    <button onclick="submitForgotPassword()" class="w-1/2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2 rounded-lg text-sm transition shadow-lg shadow-indigo-600/30">
+                    <button onclick="submitForgotPassword()" class="w-1/2 bg-pink-600 hover:bg-pink-500 text-white font-medium py-2 rounded-lg text-sm transition shadow-lg shadow-pink-600/30">
                         Get Password
                     </button>
                 </div>
@@ -83,52 +83,57 @@
     <div id="app-container" class="hidden flex h-screen overflow-hidden">
         
         <!-- SIDEBAR -->
-        <aside class="w-64 bg-slate-950 border-r border-slate-800 flex flex-col justify-between">
+        <aside class="w-64 bg-pink-950 border-r border-pink-900 flex flex-col justify-between">
             <div>
-                <div class="p-6 border-b border-slate-800/80 flex items-center gap-3">
-                    <div class="bg-indigo-600 text-white p-2 rounded-lg">
+                <div class="p-6 border-b border-pink-900 flex items-center gap-3">
+                    <div class="bg-pink-600 text-white p-2 rounded-lg">
                         <i class="fa-solid fa-chart-line"></i>
                     </div>
                     <div>
                         <h1 class="font-bold text-white leading-tight">TradeTracker</h1>
-                        <span id="sidebar-username" class="text-xs text-slate-400">Anurag Patel</span>
+                        <span id="sidebar-username" class="text-xs text-pink-300">Anurag Patel</span>
                     </div>
                 </div>
                 <nav class="p-4 space-y-1">
-                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-indigo-600 text-white transition">
+                    <button onclick="switchTab('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-pink-600 text-white transition">
                         <i class="fa-solid fa-house w-5"></i> Dashboard
                     </button>
-                    <button onclick="switchTab('trades')" id="nav-trades" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                    <button onclick="switchTab('trades')" id="nav-trades" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition">
                         <i class="fa-solid fa-list-check w-5"></i> Trade Log
                     </button>
-                    <button onclick="switchTab('recycle')" id="nav-recycle" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
-                        <i class="fa-solid fa-trash-arrow-up w-5"></i> Recycle Bin <span id="recycle-badge" class="ml-auto bg-slate-800 text-slate-300 px-2 py-0.5 rounded-full text-xs">0</span>
+                    <button onclick="switchTab('recycle')" id="nav-recycle" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition">
+                        <i class="fa-solid fa-trash-arrow-up w-5"></i> Recycle Bin <span id="recycle-badge" class="ml-auto bg-pink-900 text-pink-200 px-2 py-0.5 rounded-full text-xs">0</span>
                     </button>
-                    <button onclick="switchTab('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition">
+                    <button onclick="switchTab('settings')" id="nav-settings" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition">
                         <i class="fa-solid fa-gear w-5"></i> Settings
                     </button>
                 </nav>
             </div>
-            <div class="p-4 border-t border-slate-800/80">
-                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:bg-red-500/10 transition">
+            <div class="p-4 border-t border-pink-900">
+                <button onclick="handleLogout()" class="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-red-300 hover:bg-red-500/10 transition">
                     <i class="fa-solid fa-right-from-bracket w-5"></i> Logout
                 </button>
             </div>
         </aside>
 
         <!-- CONTENT AREA -->
-        <main class="flex-1 overflow-y-auto bg-slate-900 p-8">
+        <main class="flex-1 overflow-y-auto bg-pink-950 p-8">
             
             <!-- TOP BAR -->
-            <header class="flex justify-between items-center mb-8 pb-4 border-b border-slate-800">
+            <header class="flex justify-between items-center mb-8 pb-4 border-b border-pink-900">
                 <div>
                     <h2 id="page-title" class="text-2xl font-bold text-white">Dashboard Overview</h2>
-                    <p id="current-date" class="text-slate-400 text-sm mt-0.5">Welcome back, Anurag</p>
+                    <p id="current-date" class="text-pink-300 text-sm mt-0.5">Welcome back, Anurag</p>
                 </div>
                 <div class="flex items-center gap-4">
-                    <div class="bg-slate-800 border border-slate-700 px-4 py-2 rounded-xl flex items-center gap-3">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" id="db-status-dot"></span>
-                        <span class="text-xs font-medium text-slate-300" id="db-status-text">Connected to Firebase</span>
+                    <!-- Refresh Button Added Here -->
+                    <button onclick="refreshData()" class="bg-pink-900 hover:bg-pink-800 text-pink-200 border border-pink-700/60 px-3.5 py-2 rounded-xl text-xs font-medium transition flex items-center gap-2 shadow-sm">
+                        <i class="fa-solid fa-rotate" id="refresh-icon"></i> Refresh Data
+                    </button>
+
+                    <div class="bg-pink-900/60 border border-pink-800 px-4 py-2 rounded-xl flex items-center gap-3">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" id="db-status-dot"></span>
+                        <span class="text-xs font-medium text-pink-200" id="db-status-text">Connected to Firebase</span>
                     </div>
                 </div>
             </header>
@@ -137,33 +142,33 @@
             <div id="tab-dashboard" class="space-y-6">
                 <!-- Metrics Grid -->
                 <div class="grid grid-cols-4 gap-6">
-                    <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Initial Capital</p>
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-5 rounded-2xl shadow-lg">
+                        <p class="text-xs font-medium text-pink-300 uppercase tracking-wider">Initial Capital</p>
                         <h3 class="text-2xl font-bold text-white mt-2" id="metric-initial-cap">₹50,000</h3>
                     </div>
-                    <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Current Capital</p>
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-5 rounded-2xl shadow-lg">
+                        <p class="text-xs font-medium text-pink-300 uppercase tracking-wider">Current Capital</p>
                         <h3 class="text-2xl font-bold text-white mt-2" id="metric-current-cap">₹50,000</h3>
                     </div>
-                    <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Total P&L</p>
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-5 rounded-2xl shadow-lg">
+                        <p class="text-xs font-medium text-pink-300 uppercase tracking-wider">Total P&L</p>
                         <h3 class="text-2xl font-bold text-emerald-400 mt-2" id="metric-total-pnl">₹0.00</h3>
                     </div>
-                    <div class="bg-slate-800/50 border border-slate-700/60 p-5 rounded-2xl">
-                        <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Daily Loss Limit</p>
-                        <h3 class="text-2xl font-bold text-rose-400 mt-2" id="metric-loss-limit">₹2,000</h3>
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-5 rounded-2xl shadow-lg">
+                        <p class="text-xs font-medium text-pink-300 uppercase tracking-wider">Daily Loss Limit</p>
+                        <h3 class="text-2xl font-bold text-rose-300 mt-2" id="metric-loss-limit">₹2,000</h3>
                     </div>
                 </div>
 
                 <!-- Add Trade & Equity Chart Row -->
                 <div class="grid grid-cols-3 gap-6">
                     <!-- Add Trade Form -->
-                    <div class="bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl col-span-1">
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-6 rounded-2xl col-span-1 shadow-lg">
                         <h3 class="text-lg font-bold text-white mb-4">Add New Trade</h3>
                         <form id="trade-form" onsubmit="addTrade(event)" class="space-y-4">
                             <div>
-                                <label class="block text-xs font-medium text-slate-400 mb-1">Index / Asset</label>
-                                <select id="trade-index" onchange="updateLotSize()" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                <label class="block text-xs font-medium text-pink-300 mb-1">Index / Asset</label>
+                                <select id="trade-index" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                     <option value="Nifty">Nifty (65 Qty)</option>
                                     <option value="Sensex">Sensex (20 Qty)</option>
                                     <option value="BankNifty">BankNifty (30 Qty)</option>
@@ -172,39 +177,39 @@
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-400 mb-1">Type</label>
-                                    <select id="trade-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <label class="block text-xs font-medium text-pink-300 mb-1">Type</label>
+                                    <select id="trade-type" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                         <option value="CE">CALL (CE)</option>
                                         <option value="PE">PUT (PE)</option>
                                     </select>
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-400 mb-1">Lots</label>
-                                    <input type="number" id="trade-lots" value="1" min="1" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <label class="block text-xs font-medium text-pink-300 mb-1">Lots</label>
+                                    <input type="number" id="trade-lots" value="1" min="1" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                 </div>
                             </div>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-400 mb-1">Buy Price</label>
-                                    <input type="number" step="0.05" id="trade-buy" required placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <label class="block text-xs font-medium text-pink-300 mb-1">Buy Price</label>
+                                    <input type="number" step="0.05" id="trade-buy" required placeholder="0.00" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-400 mb-1">Sell Price</label>
-                                    <input type="number" step="0.05" id="trade-sell" required placeholder="0.00" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <label class="block text-xs font-medium text-pink-300 mb-1">Sell Price</label>
+                                    <input type="number" step="0.05" id="trade-sell" required placeholder="0.00" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-medium text-slate-400 mb-1">Notes / Setup</label>
-                                <input type="text" id="trade-notes" placeholder="e.g. Breakout retest" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                <label class="block text-xs font-medium text-pink-300 mb-1">Notes / Setup</label>
+                                <input type="text" id="trade-notes" placeholder="e.g. Breakout retest" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                             </div>
-                            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-lg shadow-indigo-600/20">
+                            <button type="submit" class="w-full bg-pink-600 hover:bg-pink-500 text-white font-medium py-2.5 rounded-lg text-sm transition shadow-lg shadow-pink-600/20">
                                 Save Trade
                             </button>
                         </form>
                     </div>
 
                     <!-- Chart Container -->
-                    <div class="bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl col-span-2 flex flex-col">
+                    <div class="bg-pink-900/40 border border-pink-800/60 p-6 rounded-2xl col-span-2 flex flex-col shadow-lg">
                         <h3 class="text-lg font-bold text-white mb-4">Equity Curve Visual Graph</h3>
                         <div class="flex-1 relative flex items-center justify-center min-h-[280px]">
                             <canvas id="equityChart"></canvas>
@@ -215,15 +220,15 @@
 
             <!-- TAB 2: TRADE LOG -->
             <div id="tab-trades" class="hidden space-y-6">
-                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden">
-                    <div class="p-6 border-b border-slate-700/60 flex justify-between items-center">
+                <div class="bg-pink-900/40 border border-pink-800/60 rounded-2xl overflow-hidden shadow-lg">
+                    <div class="p-6 border-b border-pink-800/60 flex justify-between items-center">
                         <h3 class="text-lg font-bold text-white">All Executed Trades</h3>
-                        <span id="trade-count" class="text-xs text-slate-400 bg-slate-900 px-3 py-1 rounded-full border border-slate-700">0 Trades</span>
+                        <span id="trade-count" class="text-xs text-pink-300 bg-pink-950 px-3 py-1 rounded-full border border-pink-800">0 Trades</span>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700/60">
+                                <tr class="bg-pink-950/60 text-pink-300 text-xs uppercase tracking-wider border-b border-pink-800/60">
                                     <th class="p-4">Date / Time</th>
                                     <th class="p-4">Asset</th>
                                     <th class="p-4">Type</th>
@@ -235,7 +240,7 @@
                                     <th class="p-4 text-right">Action</th>
                                 </tr>
                             </thead>
-                            <tbody id="trades-table-body" class="divide-y divide-slate-800 text-sm">
+                            <tbody id="trades-table-body" class="divide-y divide-pink-900/60 text-sm">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -245,20 +250,20 @@
 
             <!-- TAB 3: RECYCLE BIN -->
             <div id="tab-recycle" class="hidden space-y-6">
-                <div class="bg-slate-800/50 border border-slate-700/60 rounded-2xl overflow-hidden">
-                    <div class="p-6 border-b border-slate-700/60 flex justify-between items-center">
+                <div class="bg-pink-900/40 border border-pink-800/60 rounded-2xl overflow-hidden shadow-lg">
+                    <div class="p-6 border-b border-pink-800/60 flex justify-between items-center">
                         <div>
                             <h3 class="text-lg font-bold text-white">Recycle Bin</h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Deleted trades are stored here. You can restore or permanently delete them.</p>
+                            <p class="text-xs text-pink-300 mt-0.5">Deleted trades are stored here. You can restore or permanently delete them.</p>
                         </div>
-                        <button onclick="emptyRecycleBin()" class="bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-xs px-3 py-1.5 rounded-lg transition font-medium">
+                        <button onclick="emptyRecycleBin()" class="bg-red-500/10 hover:bg-red-500/20 text-red-300 border border-red-500/30 text-xs px-3 py-1.5 rounded-lg transition font-medium">
                             Empty Recycle Bin
                         </button>
                     </div>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="bg-slate-900/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700/60">
+                                <tr class="bg-pink-950/60 text-pink-300 text-xs uppercase tracking-wider border-b border-pink-800/60">
                                     <th class="p-4">Deleted On</th>
                                     <th class="p-4">Asset</th>
                                     <th class="p-4">Type</th>
@@ -268,7 +273,7 @@
                                     <th class="p-4 text-right">Actions</th>
                                 </tr>
                             </thead>
-                            <tbody id="recycle-table-body" class="divide-y divide-slate-800 text-sm">
+                            <tbody id="recycle-table-body" class="divide-y divide-pink-900/60 text-sm">
                                 <!-- Populated dynamically -->
                             </tbody>
                         </table>
@@ -278,43 +283,43 @@
 
             <!-- TAB 4: SETTINGS -->
             <div id="tab-settings" class="hidden space-y-6 max-w-2xl">
-                <div class="bg-slate-800/50 border border-slate-700/60 p-6 rounded-2xl space-y-6">
+                <div class="bg-pink-900/40 border border-pink-800/60 p-6 rounded-2xl space-y-6 shadow-lg">
                     <div>
                         <h3 class="text-lg font-bold text-white">Configuration Settings</h3>
-                        <p class="text-xs text-slate-400 mt-0.5">Manage your login credentials, capital, risk limits, and Firebase connection.</p>
+                        <p class="text-xs text-pink-300 mt-0.5">Manage your login credentials, capital, risk limits, and Firebase connection.</p>
                     </div>
 
                     <div class="space-y-4 pt-2">
                         <!-- Change Credentials Section -->
-                        <div class="p-4 bg-slate-900/60 border border-slate-700/60 rounded-xl space-y-3">
-                            <h4 class="text-sm font-semibold text-indigo-400"><i class="fa-solid fa-lock mr-1.5"></i> Change Login Credentials</h4>
+                        <div class="p-4 bg-pink-950/60 border border-pink-800/60 rounded-xl space-y-3">
+                            <h4 class="text-sm font-semibold text-pink-400"><i class="fa-solid fa-lock mr-1.5"></i> Change Login Credentials</h4>
                             <div class="grid grid-cols-2 gap-3">
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-400 mb-1">New User ID</label>
-                                    <input type="text" id="setting-user-id" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <label class="block text-xs font-medium text-pink-300 mb-1">New User ID</label>
+                                    <input type="text" id="setting-user-id" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-medium text-slate-400 mb-1">New Password</label>
-                                    <input type="text" id="setting-password" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
+                                    <label class="block text-xs font-medium text-pink-300 mb-1">New Password</label>
+                                    <input type="text" id="setting-password" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-pink-500">
                                 </div>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Initial Capital (₹)</label>
-                            <input type="number" id="setting-initial-capital" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                            <label class="block text-xs font-medium text-pink-300 mb-1">Initial Capital (₹)</label>
+                            <input type="number" id="setting-initial-capital" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-pink-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Daily Loss Limit (₹)</label>
-                            <input type="number" id="setting-loss-limit" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                            <label class="block text-xs font-medium text-pink-300 mb-1">Daily Loss Limit (₹)</label>
+                            <input type="number" id="setting-loss-limit" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-pink-500">
                         </div>
                         <div>
-                            <label class="block text-xs font-medium text-slate-400 mb-1">Firebase Database URL</label>
-                            <input type="text" id="setting-db-url" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-indigo-500">
+                            <label class="block text-xs font-medium text-pink-300 mb-1">Firebase Database URL</label>
+                            <input type="text" id="setting-db-url" class="w-full bg-pink-950 border border-pink-800 rounded-lg px-4 py-2.5 text-white text-sm focus:outline-none focus:border-pink-500">
                         </div>
-                        <div class="pt-4 border-t border-slate-700/60 flex items-center justify-between">
-                            <span class="text-xs text-slate-400" id="settings-save-status">Settings are saved locally & synced.</span>
-                            <button onclick="saveSettings()" class="bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition shadow-lg shadow-indigo-600/20">
+                        <div class="pt-4 border-t border-pink-800/60 flex items-center justify-between">
+                            <span class="text-xs text-pink-300" id="settings-save-status">Settings are saved locally & synced.</span>
+                            <button onclick="saveSettings()" class="bg-pink-600 hover:bg-pink-500 text-white font-medium px-6 py-2.5 rounded-lg text-sm transition shadow-lg shadow-pink-600/20">
                                 Save Settings
                             </button>
                         </div>
@@ -349,10 +354,35 @@
         let equityChartInstance = null;
         let dbRef = null;
 
+        // Load saved settings on startup immediately
+        const savedSettingsInit = localStorage.getItem('trading_tracker_settings');
+        if(savedSettingsInit) {
+            try {
+                const parsed = JSON.parse(savedSettingsInit);
+                appState.userId = parsed.userId || 'Anurag';
+                appState.password = parsed.password || '12345';
+                appState.initialCapital = parsed.initialCapital || 50000;
+                appState.dailyLossLimit = parsed.dailyLossLimit || 2000;
+                appState.dbUrl = parsed.dbUrl || appState.dbUrl;
+            } catch(e) {}
+        }
+
+        // Set initial login fields value
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('login-user').value = appState.userId;
+            document.getElementById('sidebar-username').innerText = appState.userId;
+        });
+
         // Login Handler
         function handleLogin() {
             const user = document.getElementById('login-user').value.trim();
             const pass = document.getElementById('login-pass').value.trim();
+
+            if(!user || !pass) {
+                document.getElementById('login-error').innerText = "Kripya ID aur Password dono bharein!";
+                document.getElementById('login-error').classList.remove('hidden');
+                return;
+            }
 
             if (user === appState.userId && pass === appState.password) {
                 document.getElementById('login-error').classList.add('hidden');
@@ -360,6 +390,7 @@
                 document.getElementById('app-container').classList.remove('hidden');
                 initApp();
             } else {
+                document.getElementById('login-error').innerText = "Invalid Credentials!";
                 document.getElementById('login-error').classList.remove('hidden');
             }
         }
@@ -369,6 +400,32 @@
             document.getElementById('login-modal').classList.remove('hidden');
             document.getElementById('login-user').value = appState.userId;
             document.getElementById('login-pass').value = '';
+            document.getElementById('login-error').classList.add('hidden');
+        }
+
+        // Refresh Data Handler
+        function refreshData() {
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('fa-spin');
+            
+            // Reload local or trigger sync fetch
+            if(dbRef) {
+                dbRef.once('value').then((snapshot) => {
+                    const data = snapshot.val();
+                    if(data) {
+                        appState.trades = data.trades || [];
+                        appState.recycleBin = data.recycleBin || [];
+                    }
+                    updateUI();
+                    setTimeout(() => icon.classList.remove('fa-spin'), 600);
+                }).catch(() => {
+                    loadLocalFallback();
+                    setTimeout(() => icon.classList.remove('fa-spin'), 600);
+                });
+            } else {
+                loadLocalFallback();
+                setTimeout(() => icon.classList.remove('fa-spin'), 600);
+            }
         }
 
         // Forgot Password Handlers
@@ -390,10 +447,10 @@
                 msgEl.className = "text-xs text-center text-emerald-400 font-medium";
                 msgEl.innerText = `Your password is: ${appState.password}`;
             } else if(user !== "") {
-                msgEl.className = "text-xs text-center text-rose-400 font-medium";
+                msgEl.className = "text-xs text-center text-rose-300 font-medium";
                 msgEl.innerText = "User ID not found!";
             } else {
-                msgEl.className = "text-xs text-center text-rose-400 font-medium";
+                msgEl.className = "text-xs text-center text-rose-300 font-medium";
                 msgEl.innerText = "Please enter your User ID.";
             }
         }
@@ -403,11 +460,11 @@
             ['dashboard', 'trades', 'recycle', 'settings'].forEach(t => {
                 document.getElementById(`tab-${t}`).classList.add('hidden');
                 const navBtn = document.getElementById(`nav-${t}`);
-                navBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-slate-400 hover:bg-slate-900 hover:text-white transition";
+                navBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium text-pink-300 hover:bg-pink-900/50 hover:text-white transition";
             });
             document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             const activeBtn = document.getElementById(`nav-${tabId}`);
-            activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-indigo-600 text-white transition";
+            activeBtn.className = "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium bg-pink-600 text-white transition";
             
             const titles = {
                 'dashboard': 'Dashboard Overview',
@@ -423,29 +480,15 @@
 
         // Initialize App & Firebase
         function initApp() {
-            // Load settings from localStorage if available
-            const savedSettings = localStorage.getItem('trading_tracker_settings');
-            if(savedSettings) {
-                const parsed = JSON.parse(savedSettings);
-                appState.userId = parsed.userId || 'Anurag';
-                appState.password = parsed.password || '12345';
-                appState.initialCapital = parsed.initialCapital || 50000;
-                appState.dailyLossLimit = parsed.dailyLossLimit || 2000;
-                appState.dbUrl = parsed.dbUrl || appState.dbUrl;
-            }
-
-            // Populate settings inputs
             document.getElementById('setting-user-id').value = appState.userId;
             document.getElementById('setting-password').value = appState.password;
             document.getElementById('setting-initial-capital').value = appState.initialCapital;
             document.getElementById('setting-loss-limit').value = appState.dailyLossLimit;
             document.getElementById('setting-db-url').value = appState.dbUrl;
 
-            // Update sidebar user name
             document.getElementById('sidebar-username').innerText = appState.userId;
-            document.getElementById('login-default-hint').innerText = `ID: ${appState.userId} / Pass: [Hidden]`;
+            document.getElementById('login-default-hint').innerText = `ID: ${appState.userId} / Pass: [Saved]`;
 
-            // Initialize Firebase
             try {
                 if (!firebase.apps.length) {
                     firebase.initializeApp({
@@ -454,7 +497,6 @@
                 }
                 dbRef = firebase.database().ref('anurag_tracker');
                 
-                // Fetch data
                 dbRef.on('value', (snapshot) => {
                     const data = snapshot.val();
                     if(data) {
@@ -463,17 +505,16 @@
                     }
                     updateUI();
                 }, (error) => {
-                    document.getElementById('db-status-dot').className = "w-2.5 h-2.5 rounded-full bg-amber-500";
+                    document.getElementById('db-status-dot').className = "w-2.5 h-2.5 rounded-full bg-amber-400";
                     document.getElementById('db-status-text').innerText = "Offline Mode (Local)";
                 });
             } catch(e) {
                 console.error(e);
-                document.getElementById('db-status-dot').className = "w-2.5 h-2.5 rounded-full bg-amber-500";
+                document.getElementById('db-status-dot').className = "w-2.5 h-2.5 rounded-full bg-amber-400";
                 document.getElementById('db-status-text').innerText = "Offline Mode (Local)";
                 loadLocalFallback();
             }
 
-            // Date header
             const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
             document.getElementById('current-date').innerText = `Welcome back, ${appState.userId} • ${new Date().toLocaleDateString('en-US', options)}`;
         }
@@ -496,8 +537,6 @@
                 }).catch(err => console.log("Cloud sync error:", err));
             }
         }
-
-        function updateLotSize() {}
 
         function addTrade(e) {
             e.preventDefault();
@@ -531,7 +570,6 @@
             document.getElementById('trade-lots').value = "1";
         }
 
-        // Delete trade to Recycle Bin
         function deleteTrade(id) {
             const index = appState.trades.findIndex(t => t.id === id);
             if(index !== -1) {
@@ -543,7 +581,6 @@
             }
         }
 
-        // Restore from Recycle Bin
         function restoreTrade(id) {
             const index = appState.recycleBin.findIndex(t => t.id === id);
             if(index !== -1) {
@@ -555,7 +592,6 @@
             }
         }
 
-        // Permanently Delete from Recycle Bin
         function permanentDelete(id) {
             appState.recycleBin = appState.recycleBin.filter(t => t.id !== id);
             saveDataToDB();
@@ -570,7 +606,6 @@
             }
         }
 
-        // Save Settings
         function saveSettings() {
             const newUid = document.getElementById('setting-user-id').value.trim();
             const newPass = document.getElementById('setting-password').value.trim();
@@ -591,19 +626,19 @@
             }));
 
             document.getElementById('sidebar-username').innerText = appState.userId;
+            document.getElementById('login-default-hint').innerText = `ID: ${appState.userId} / Pass: [Saved]`;
 
             const status = document.getElementById('settings-save-status');
             status.innerText = "Settings & Credentials updated successfully!";
-            status.className = "text-xs text-emerald-400 font-medium";
+            status.className = "text-xs text-pink-300 font-medium";
             setTimeout(() => {
                 status.innerText = "Settings are saved locally & synced.";
-                status.className = "text-xs text-slate-400";
+                status.className = "text-xs text-pink-300";
             }, 3000);
 
             updateUI();
         }
 
-        // Update UI metrics, tables, badge counts
         function updateUI() {
             let totalPnl = 0;
             appState.trades.forEach(t => totalPnl += t.pnl);
@@ -620,26 +655,25 @@
             document.getElementById('metric-loss-limit').innerText = `₹${appState.dailyLossLimit.toLocaleString('en-IN')}`;
             document.getElementById('recycle-badge').innerText = appState.recycleBin.length;
 
-            // Render Trades Table
             const tbody = document.getElementById('trades-table-body');
             tbody.innerHTML = '';
             if(appState.trades.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-slate-500">No trades recorded yet.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="9" class="p-8 text-center text-pink-400/60">No trades recorded yet.</td></tr>`;
             } else {
                 appState.trades.forEach(t => {
                     const row = document.createElement('tr');
-                    row.className = "hover:bg-slate-800/40 transition";
+                    row.className = "hover:bg-pink-900/30 transition";
                     row.innerHTML = `
-                        <td class="p-4 text-slate-400 text-xs">${t.date}</td>
+                        <td class="p-4 text-pink-300 text-xs">${t.date}</td>
                         <td class="p-4 font-semibold text-white">${t.index}</td>
-                        <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${t.type}</span></td>
-                        <td class="p-4 text-slate-300">${t.lots} <span class="text-xs text-slate-500">(${t.qty})</span></td>
-                        <td class="p-4 text-slate-300">₹${t.buy.toFixed(2)}</td>
-                        <td class="p-4 text-slate-300">₹${t.sell.toFixed(2)}</td>
-                        <td class="p-4 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${t.pnl >= 0 ? '+' : ''}₹${t.pnl.toFixed(2)}</td>
-                        <td class="p-4 text-slate-400 text-xs max-w-xs truncate">${t.notes || '-'}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-300 border border-rose-500/20'}">${t.type}</span></td>
+                        <td class="p-4 text-pink-200">${t.lots} <span class="text-xs text-pink-400">(${t.qty})</span></td>
+                        <td class="p-4 text-pink-200">₹${t.buy.toFixed(2)}</td>
+                        <td class="p-4 text-pink-200">₹${t.sell.toFixed(2)}</td>
+                        <td class="p-4 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-300'}">${t.pnl >= 0 ? '+' : ''}₹${t.pnl.toFixed(2)}</td>
+                        <td class="p-4 text-pink-300 text-xs max-w-xs truncate">${t.notes || '-'}</td>
                         <td class="p-4 text-right">
-                            <button onclick="deleteTrade('${t.id}')" class="text-slate-500 hover:text-red-400 transition p-1" title="Move to Recycle Bin">
+                            <button onclick="deleteTrade('${t.id}')" class="text-pink-400 hover:text-red-300 transition p-1" title="Move to Recycle Bin">
                                 <i class="fa-solid fa-trash"></i>
                             </button>
                         </td>
@@ -649,27 +683,26 @@
             }
             document.getElementById('trade-count').innerText = `${appState.trades.length} Trades`;
 
-            // Render Recycle Bin Table
             const recTbody = document.getElementById('recycle-table-body');
             recTbody.innerHTML = '';
             if(appState.recycleBin.length === 0) {
-                recTbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-slate-500">Recycle bin is empty.</td></tr>`;
+                recTbody.innerHTML = `<tr><td colspan="7" class="p-8 text-center text-pink-400/60">Recycle bin is empty.</td></tr>`;
             } else {
                 appState.recycleBin.forEach(t => {
                     const row = document.createElement('tr');
-                    row.className = "hover:bg-slate-800/40 transition";
+                    row.className = "hover:bg-pink-900/30 transition";
                     row.innerHTML = `
-                        <td class="p-4 text-slate-400 text-xs">${t.deletedAt || t.date}</td>
+                        <td class="p-4 text-pink-300 text-xs">${t.deletedAt || t.date}</td>
                         <td class="p-4 font-semibold text-white">${t.index}</td>
-                        <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${t.type}</span></td>
-                        <td class="p-4 text-slate-300">${t.lots} lots</td>
-                        <td class="p-4 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${t.pnl >= 0 ? '+' : ''}₹${t.pnl.toFixed(2)}</td>
-                        <td class="p-4 text-slate-400 text-xs">${t.notes || '-'}</td>
+                        <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-300'}">${t.type}</span></td>
+                        <td class="p-4 text-pink-200">${t.lots} lots</td>
+                        <td class="p-4 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-300'}">${t.pnl >= 0 ? '+' : ''}₹${t.pnl.toFixed(2)}</td>
+                        <td class="p-4 text-pink-300 text-xs">${t.notes || '-'}</td>
                         <td class="p-4 text-right space-x-2">
-                            <button onclick="restoreTrade('${t.id}')" class="text-indigo-400 hover:text-indigo-300 transition text-xs bg-indigo-500/10 px-2.5 py-1 rounded border border-indigo-500/20">
+                            <button onclick="restoreTrade('${t.id}')" class="text-pink-200 hover:text-white transition text-xs bg-pink-800/60 px-2.5 py-1 rounded border border-pink-700">
                                 <i class="fa-solid fa-rotate-left mr-1"></i> Restore
                             </button>
-                            <button onclick="permanentDelete('${t.id}')" class="text-red-400 hover:text-red-300 transition text-xs bg-red-500/10 px-2.5 py-1 rounded border border-red-500/20">
+                            <button onclick="permanentDelete('${t.id}')" class="text-red-300 hover:text-red-200 transition text-xs bg-red-900/40 px-2.5 py-1 rounded border border-red-700/60">
                                 <i class="fa-solid fa-xmark mr-1"></i> Delete
                             </button>
                         </td>
@@ -681,7 +714,6 @@
             renderChart();
         }
 
-        // Render Chart
         function renderChart() {
             const ctx = document.getElementById('equityChart').getContext('2d');
             
@@ -707,12 +739,12 @@
                     datasets: [{
                         label: 'Equity Curve (₹)',
                         data: dataPoints,
-                        borderColor: '#6366f1',
-                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        borderColor: '#db2777',
+                        backgroundColor: 'rgba(219, 39, 119, 0.15)',
                         borderWidth: 2.5,
                         fill: true,
                         tension: 0.3,
-                        pointBackgroundColor: '#6366f1',
+                        pointBackgroundColor: '#db2777',
                         pointRadius: 4
                     }]
                 },
@@ -725,11 +757,11 @@
                     scales: {
                         x: {
                             grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { size: 11 } }
+                            ticks: { color: '#f472b6', font: { size: 11 } }
                         },
                         y: {
                             grid: { color: 'rgba(255, 255, 255, 0.05)' },
-                            ticks: { color: '#94a3b8', font: { size: 11 } }
+                            ticks: { color: '#f472b6', font: { size: 11 } }
                         }
                     }
                 }
