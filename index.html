@@ -142,7 +142,7 @@
 
             <!-- TAB 1: DASHBOARD -->
             <div id="tab-dashboard" class="space-y-6">
-                <!-- Metrics Grid (Updated to 3 columns since Daily Loss Limit is removed) -->
+                <!-- Metrics Grid -->
                 <div class="grid grid-cols-3 gap-6">
                     <div class="bg-slate-900 border border-slate-800 p-5 rounded-2xl shadow-lg">
                         <p class="text-xs font-medium text-slate-400 uppercase tracking-wider">Initial Capital (Updated)</p>
@@ -212,19 +212,23 @@
                             <div>
                                 <label class="block text-xs font-medium text-slate-400 mb-1">Index / Asset</label>
                                 <select id="trade-index" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
-                                    <option value="Nifty">Nifty (65 Qty)</option>
-                                    <option value="Sensex">Sensex (20 Qty)</option>
-                                    <option value="BankNifty">BankNifty (30 Qty)</option>
-                                    <option value="FinNifty">FinNifty (60 Qty)</option>
+                                    <option value="Nifty">Nifty</option>
+                                    <option value="Sensex">Sensex</option>
+                                    <option value="BankNifty">BankNifty</option>
+                                    <option value="FinNifty">FinNifty</option>
                                 </select>
                             </div>
-                            <div class="grid grid-cols-2 gap-3">
+                            <div class="grid grid-cols-3 gap-2">
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Type</label>
                                     <select id="trade-type" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
-                                        <option value="CE">CALL (CE)</option>
-                                        <option value="PE">PUT (PE)</option>
+                                        <option value="CE">CE</option>
+                                        <option value="PE">PE</option>
                                     </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-medium text-slate-400 mb-1">Strike Price</label>
+                                    <input type="number" step="0.5" id="trade-strike" required placeholder="24500" class="w-full bg-slate-950 border border-slate-800 rounded-lg px-3 py-2 text-white text-sm focus:outline-none focus:border-indigo-500">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-medium text-slate-400 mb-1">Lots</label>
@@ -273,7 +277,7 @@
                             <thead>
                                 <tr class="bg-slate-950/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
                                     <th class="p-4">Date / Time</th>
-                                    <th class="p-4">Asset</th>
+                                    <th class="p-4">Asset & Strike</th>
                                     <th class="p-4">Type</th>
                                     <th class="p-4">Lots</th>
                                     <th class="p-4">Buy Price</th>
@@ -336,7 +340,7 @@
                             <thead>
                                 <tr class="bg-slate-950/60 text-slate-400 text-xs uppercase tracking-wider border-b border-slate-800">
                                     <th class="p-4">Deleted On</th>
-                                    <th class="p-4">Asset</th>
+                                    <th class="p-4">Asset & Strike</th>
                                     <th class="p-4">Type</th>
                                     <th class="p-4">Lots</th>
                                     <th class="p-4">P&L</th>
@@ -401,10 +405,10 @@
     <script>
         // Lot sizes configuration
         const lotSizes = {
-            'Nifty': 65,
-            'Sensex': 20,
-            'BankNifty': 30,
-            'FinNifty': 60
+            'Nifty': 25,
+            'Sensex': 10,
+            'BankNifty': 15,
+            'FinNifty': 25
         };
 
         // App state
@@ -665,11 +669,13 @@
             e.preventDefault();
             const index = document.getElementById('trade-index').value;
             const type = document.getElementById('trade-type').value;
+            const strike = parseFloat(document.getElementById('trade-strike').value) || 0;
             const lots = parseInt(document.getElementById('trade-lots').value) || 1;
             const buy = parseFloat(document.getElementById('trade-buy').value);
             const sell = parseFloat(document.getElementById('trade-sell').value);
             const notes = document.getElementById('trade-notes').value;
 
+            // Auto-fetch lot size based on selected index
             const qty = lots * lotSizes[index];
             const pnl = (sell - buy) * qty;
 
@@ -678,6 +684,7 @@
                 date: new Date().toLocaleString(),
                 index,
                 type,
+                strike,
                 lots,
                 qty,
                 buy,
@@ -793,7 +800,7 @@
                     row.className = "hover:bg-slate-800/50 transition";
                     row.innerHTML = `
                         <td class="p-4 text-slate-400 text-xs">${t.date}</td>
-                        <td class="p-4 font-semibold text-white">${t.index}</td>
+                        <td class="p-4 font-semibold text-white">${t.index} <span class="text-xs text-indigo-400">(${t.strike || '-'})</span></td>
                         <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'}">${t.type}</span></td>
                         <td class="p-4 text-slate-300">${t.lots} <span class="text-xs text-slate-500">(${t.qty})</span></td>
                         <td class="p-4 text-slate-300">₹${t.buy.toFixed(2)}</td>
@@ -846,7 +853,7 @@
                     row.className = "hover:bg-slate-800/50 transition";
                     row.innerHTML = `
                         <td class="p-4 text-slate-400 text-xs">${t.deletedAt || t.date}</td>
-                        <td class="p-4 font-semibold text-white">${t.index}</td>
+                        <td class="p-4 font-semibold text-white">${t.index} <span class="text-xs text-indigo-400">(${t.strike || '-'})</span></td>
                         <td class="p-4"><span class="px-2 py-0.5 rounded text-xs font-semibold ${t.type === 'CE' ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${t.type}</span></td>
                         <td class="p-4 text-slate-300">${t.lots} lots</td>
                         <td class="p-4 font-semibold ${t.pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${t.pnl >= 0 ? '+' : ''}₹${t.pnl.toFixed(2)}</td>
