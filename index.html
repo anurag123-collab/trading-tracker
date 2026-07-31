@@ -27,13 +27,6 @@
         body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; transition: background 0.3s, color 0.3s; }
         .hidden { display: none !important; }
         
-        /* Layout */
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .justify-between { justify-content: space-between; }
-        .items-center { align-items: center; }
-        .gap-4 { gap: 1rem; }
-        .gap-3 { gap: 0.75.rem; }
         .grid { display: grid; }
         .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
         .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -44,7 +37,6 @@
             .col-span-2 { grid-column: span 1; }
         }
 
-        /* Components */
         .card { background-color: var(--bg-card); border: 1px solid var(--border-color); border-radius: 12px; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
         .btn { padding: 0.5rem 1rem; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; }
         .btn-primary { background-color: var(--primary); color: white; width: 100%; justify-content: center; padding: 0.75rem; }
@@ -53,12 +45,10 @@
         .input-field:focus { outline: 2px solid var(--primary); }
         label { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); display: block; margin-bottom: 0.25rem; }
         
-        /* Table */
         table { width: 100%; border-collapse: collapse; text-align: left; }
         th, td { padding: 0.875rem; border-bottom: 1px solid var(--border-color); font-size: 0.875rem; }
         th { background-color: rgba(0,0,0,0.2); color: var(--text-muted); text-transform: uppercase; font-size: 0.75rem; }
         
-        /* Badges & Colors */
         .text-emerald { color: #34d399; }
         .text-rose { color: #f87171; }
         .text-amber { color: #fbbf24; }
@@ -151,7 +141,7 @@
                     <h3 style="font-size: 1rem; font-weight: bold; margin-bottom: 1rem; display: flex; gap: 0.5rem; align-items: center;">
                         <i class="fa-solid fa-plus-circle text-emerald"></i> Add New Trade
                     </h3>
-                    <form onsubmit="addTrade(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                    <form id="tradeForm" onsubmit="addTrade(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
                         <div>
                             <label>Asset Symbol</label>
                             <input type="text" id="tradeAsset" placeholder="e.g. NIFTY, BANKNIFTY" required class="input-field">
@@ -255,11 +245,21 @@
 
     <!-- Script Logic -->
     <script>
-        let trades = JSON.parse(localStorage.getItem('anurag_trading_tracker_data')) || [];
+        let trades = [];
+        try {
+            trades = JSON.parse(localStorage.getItem('anurag_trading_tracker_data')) || [];
+        } catch(e) {
+            trades = [];
+        }
+
         let activeFilter = 'ALL';
         let pnlChartInstance = null;
 
-        document.getElementById('tradeDate').valueAsDate = new Date();
+        window.addEventListener('DOMContentLoaded', () => {
+            const dateField = document.getElementById('tradeDate');
+            if(dateField) dateField.valueAsDate = new Date();
+            checkAuth();
+        });
 
         function toggleTheme() {
             document.body.classList.toggle('light-mode');
@@ -270,9 +270,12 @@
 
         function handleLogin(e) {
             e.preventDefault();
-            if(document.getElementById('pinInput').value.trim() !== "") {
+            const pinVal = document.getElementById('pinInput').value;
+            if(pinVal && pinVal.trim() !== "") {
                 localStorage.setItem('anurag_logged_in', 'true');
                 checkAuth();
+            } else {
+                alert('Please enter PIN');
             }
         }
 
@@ -282,37 +285,45 @@
         }
 
         function checkAuth() {
-            if(localStorage.getItem('anurag_logged_in') === 'true') {
-                document.getElementById('loginScreen').classList.add('hidden');
-                document.getElementById('dashboardApp').classList.remove('hidden');
+            const isLoggedIn = localStorage.getItem('anurag_logged_in');
+            const loginScreen = document.getElementById('loginScreen');
+            const dashboardApp = document.getElementById('dashboardApp');
+
+            if(isLoggedIn === 'true') {
+                if(loginScreen) loginScreen.classList.add('hidden');
+                if(dashboardApp) dashboardApp.classList.remove('hidden');
                 renderDashboard();
             } else {
-                document.getElementById('loginScreen').classList.remove('hidden');
-                document.getElementById('dashboardApp').classList.add('hidden');
+                if(loginScreen) loginScreen.classList.remove('hidden');
+                if(dashboardApp) dashboardApp.classList.add('hidden');
             }
         }
 
         function addTrade(e) {
             e.preventDefault();
-            const asset = document.getElementById('tradeAsset').value.toUpperCase();
-            const type = document.getElementById('tradeType').value;
-            const status = document.getElementById('tradeStatus').value;
-            const entry = parseFloat(document.getElementById('tradeEntry').value);
-            const exit = parseFloat(document.getElementById('tradeExit').value);
-            const sl = parseFloat(document.getElementById('tradeSL').value) || entry;
-            const qty = parseInt(document.getElementById('tradeQty').value);
-            const date = document.getElementById('tradeDate').value;
-            const notes = document.getElementById('tradeNotes').value;
+            try {
+                const asset = document.getElementById('tradeAsset').value.toUpperCase();
+                const type = document.getElementById('tradeType').value;
+                const status = document.getElementById('tradeStatus').value;
+                const entry = parseFloat(document.getElementById('tradeEntry').value);
+                const exit = parseFloat(document.getElementById('tradeExit').value);
+                const sl = parseFloat(document.getElementById('tradeSL').value) || entry;
+                const qty = parseInt(document.getElementById('tradeQty').value);
+                const date = document.getElementById('tradeDate').value;
+                const notes = document.getElementById('tradeNotes').value;
 
-            let pnl = type === 'BUY' ? (exit - entry) * qty : (entry - exit) * qty;
-            let risk = Math.abs(entry - sl);
-            let reward = Math.abs(exit - entry);
-            let rrr = risk > 0 ? (reward / risk).toFixed(1) : '1.0';
+                let pnl = type === 'BUY' ? (exit - entry) * qty : (entry - exit) * qty;
+                let risk = Math.abs(entry - sl);
+                let reward = Math.abs(exit - entry);
+                let rrr = risk > 0 ? (reward / risk).toFixed(1) : '1.0';
 
-            trades.push({ id: Date.now(), asset, type, status, entry, exit, sl, qty, date, notes, pnl, rrr });
-            saveAndRender();
-            document.getElementById('tradeForm').reset();
-            document.getElementById('tradeDate').valueAsDate = new Date();
+                trades.push({ id: Date.now(), asset, type, status, entry, exit, sl, qty, date, notes, pnl, rrr });
+                saveAndRender();
+                document.getElementById('tradeForm').reset();
+                document.getElementById('tradeDate').valueAsDate = new Date();
+            } catch(err) {
+                console.error(err);
+            }
         }
 
         function filterTrades(filter) {
@@ -326,16 +337,23 @@
         }
 
         function clearAllTrades() {
-            if(confirm('Delete all trades?')) { trades = []; saveAndRender(); }
+            if(confirm('Delete all trades?')) { 
+                trades = []; 
+                saveAndRender(); 
+            }
         }
 
         function saveAndRender() {
-            localStorage.setItem('anurag_trading_tracker_data', JSON.stringify(trades));
+            try {
+                localStorage.setItem('anurag_trading_tracker_data', JSON.stringify(trades));
+            } catch(e) {}
             renderDashboard();
         }
 
         function renderDashboard() {
             const tbody = document.getElementById('tradeTableBody');
+            if(!tbody) return;
+
             let filtered = activeFilter === 'ALL' ? trades : trades.filter(t => t.status === activeFilter);
 
             if(filtered.length === 0) {
@@ -361,25 +379,46 @@
             let totalPnL = trades.reduce((acc, curr) => acc + curr.pnl, 0);
             let wins = trades.filter(t => t.status === 'WIN').length;
             let winRate = trades.length > 0 ? ((wins / trades.length) * 100).toFixed(1) : 0;
-            let avgRRR = trades.length > 0 ? (trades.reduce((acc, t) => acc + parseFloat(t.rrr), 0) / trades.length).toFixed(1) : '0.0';
+            let avgRRR = trades.length > 0 ? (trades.reduce((acc, t) => acc + parseFloat(t.rrr || 1), 0) / trades.length).toFixed(1) : '0.0';
 
-            document.getElementById('totalPnL').innerText = `₹${totalPnL.toFixed(2)}`;
-            document.getElementById('totalPnL').className = totalPnL >= 0 ? 'text-emerald' : 'text-rose';
-            document.getElementById('winRate').innerText = `${winRate}%`;
-            document.getElementById('winCount').innerText = wins;
-            document.getElementById('lossCount').innerText = trades.filter(t => t.status === 'LOSS').length;
-            document.getElementById('totalTrades').innerText = trades.length;
-            document.getElementById('avgRRR').innerText = `1 : ${avgRRR}`;
+            const totalPnLEl = document.getElementById('totalPnL');
+            if(totalPnLEl) {
+                totalPnLEl.innerText = `₹${totalPnL.toFixed(2)}`;
+                totalPnLEl.className = totalPnL >= 0 ? 'text-emerald' : 'text-rose';
+            }
+            
+            const winRateEl = document.getElementById('winRate');
+            if(winRateEl) winRateEl.innerText = `${winRate}%`;
+
+            const winCountEl = document.getElementById('winCount');
+            if(winCountEl) winCountEl.innerText = wins;
+
+            const lossCountEl = document.getElementById('lossCount');
+            if(lossCountEl) lossCountEl.innerText = trades.filter(t => t.status === 'LOSS').length;
+
+            const totalTradesEl = document.getElementById('totalTrades');
+            if(totalTradesEl) totalTradesEl.innerText = trades.length;
+
+            const avgRRREl = document.getElementById('avgRRR');
+            if(avgRRREl) avgRRREl.innerText = `1 : ${avgRRR}`;
 
             renderChart();
         }
 
         function renderChart() {
-            const ctx = document.getElementById('pnlChart').getContext('2d');
+            const canvasEl = document.getElementById('pnlChart');
+            if(!canvasEl) return;
+            const ctx = canvasEl.getContext('2d');
+            
             let cumulative = 0, labels = ['Start'], dataPoints = [0];
-            trades.forEach((t, i) => { cumulative += t.pnl; labels.push(`T${i+1}`); dataPoints.push(cumulative); });
+            trades.forEach((t, i) => { 
+                cumulative += t.pnl; 
+                labels.push(`T${i+1}`); 
+                dataPoints.push(cumulative); 
+            });
 
             if(pnlChartInstance) pnlChartInstance.destroy();
+            
             pnlChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -408,8 +447,6 @@
             a.download = `Trading_Journal.csv`;
             a.click();
         }
-
-        checkAuth();
     </script>
 </body>
 </html>
