@@ -56,16 +56,49 @@
         .badge-win { background-color: rgba(52, 211, 153, 0.2); color: #34d399; }
         .badge-loss { background-color: rgba(248, 113, 113, 0.2); color: #f87171; }
         .badge-be { background-color: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+
+        /* BAG ANIMATION STYLES */
+        .bag-container {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .animated-bag {
+            font-size: 2.8rem;
+            color: var(--primary);
+            animation: bounceBag 2s ease-in-out infinite;
+        }
+        .bag-coin {
+            position: absolute;
+            font-size: 1.2rem;
+            color: #34d399;
+            animation: coinDrop 2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+            opacity: 0;
+        }
+        @keyframes bounceBag {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        @keyframes coinDrop {
+            0% { transform: translateY(-30px) scale(0.5); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(10px) scale(1.2); opacity: 0; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- LOGIN SCREEN -->
+    <!-- LOGIN SCREEN WITH BAG ANIMATION -->
     <div id="loginScreen" style="display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 1rem;">
         <div class="card" style="width: 100%; max-width: 400px; text-align: center;">
             <div style="margin-bottom: 1.5rem;">
-                <div style="width: 70px; height: 70px; background: rgba(99,102,241,0.2); color: var(--primary); border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 0.75rem;">
-                    <i class="fa-solid fa-user-shield"></i>
+                <div class="bag-container">
+                    <i class="fa-solid fa-sack-dollar animated-bag"></i>
+                    <i class="fa-solid fa-coins bag-coin"></i>
                 </div>
                 <h2 style="font-size: 1.5rem; font-weight: bold;">Anurag Patel's</h2>
                 <h3 style="color: var(--primary); font-size: 1.1rem; margin-top: 0.2rem;">Trading Tracker Pro</h3>
@@ -113,7 +146,7 @@
         <!-- Main Content -->
         <main style="max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; flex: 1;">
             
-            <!-- Welcome Banner showing Owner Name -->
+            <!-- Welcome Banner -->
             <div class="card" style="background: linear-gradient(135deg, rgba(99,102,241,0.2), rgba(15,23,42,0.4)); display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem;">
                 <div>
                     <h2 style="font-size: 1.25rem; font-weight: bold; color: var(--text-main);">Welcome back, Anurag Patel 👋</h2>
@@ -153,27 +186,28 @@
                         <i class="fa-solid fa-plus-circle text-emerald"></i> Add New Trade
                     </h3>
                     <form id="tradeForm" onsubmit="addTrade(event)" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        
+                        <!-- ASSET SYMBOL DROPDOWN -->
                         <div>
                             <label>Asset Symbol</label>
-                            <input type="text" id="tradeAsset" placeholder="e.g. NIFTY, BANKNIFTY" required class="input-field">
+                            <select id="tradeAsset" required class="input-field">
+                                <option value="" disabled selected>Select an Asset</option>
+                                <option value="NIFTY">NIFTY</option>
+                                <option value="BANK NIFTY">BANK NIFTY</option>
+                                <option value="FIN NIFTY">FIN NIFTY</option>
+                                <option value="SENSEX">SENSEX</option>
+                                <option value="OTHER">OTHER (Stocks/Options)</option>
+                            </select>
                         </div>
-                        <div class="grid grid-cols-2" style="gap: 0.5rem;">
-                            <div>
-                                <label>Type</label>
-                                <select id="tradeType" class="input-field">
-                                    <option value="BUY">BUY / LONG</option>
-                                    <option value="SELL">SELL / SHORT</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label>Status</label>
-                                <select id="tradeStatus" class="input-field">
-                                    <option value="WIN">WIN</option>
-                                    <option value="LOSS">LOSS</option>
-                                    <option value="BE">BREAKEVEN</option>
-                                </select>
-                            </div>
+
+                        <div>
+                            <label>Type</label>
+                            <select id="tradeType" class="input-field">
+                                <option value="BUY">BUY / LONG</option>
+                                <option value="SELL">SELL / SHORT</option>
+                            </select>
                         </div>
+
                         <div class="grid grid-cols-2" style="gap: 0.5rem;">
                             <div>
                                 <label>Entry Price (₹)</label>
@@ -194,9 +228,15 @@
                                 <input type="number" id="tradeQty" placeholder="1" required class="input-field">
                             </div>
                         </div>
-                        <div>
-                            <label>Date</label>
-                            <input type="date" id="tradeDate" required class="input-field">
+                        <div class="grid grid-cols-2" style="gap: 0.5rem;">
+                            <div>
+                                <label>Brokerage / Charges (₹)</label>
+                                <input type="number" step="any" id="tradeBrokerage" placeholder="0.00" value="0" class="input-field">
+                            </div>
+                            <div>
+                                <label>Date</label>
+                                <input type="date" id="tradeDate" required class="input-field">
+                            </div>
                         </div>
                         <div>
                             <label>Notes / Strategy</label>
@@ -220,10 +260,12 @@
 
             <!-- Table Section -->
             <div class="card" style="padding: 0; overflow: hidden;">
-                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <div style="padding: 1rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
                     <h3 style="font-size: 1rem; font-weight: bold;"><i class="fa-solid fa-list text-emerald"></i> Trade History</h3>
-                    <div style="display: flex; gap: 0.5rem;">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                         <button onclick="filterTrades('ALL')" class="btn" style="padding: 0.25rem 0.75rem; background: var(--primary); color: white;">All</button>
+                        <button onclick="filterTrades('NIFTY')" class="btn" style="padding: 0.25rem 0.75rem; background: var(--border-color); color: var(--text-main);">Nifty</button>
+                        <button onclick="filterTrades('BANK NIFTY')" class="btn" style="padding: 0.25rem 0.75rem; background: var(--border-color); color: var(--text-main);">Bank Nifty</button>
                         <button onclick="filterTrades('WIN')" class="btn" style="padding: 0.25rem 0.75rem; background: rgba(52,211,153,0.2); color: #34d399;">Wins</button>
                         <button onclick="filterTrades('LOSS')" class="btn" style="padding: 0.25rem 0.75rem; background: rgba(248,113,113,0.2); color: #f87171;">Losses</button>
                     </div>
@@ -238,8 +280,8 @@
                                 <th>Qty</th>
                                 <th>Entry</th>
                                 <th>Exit</th>
-                                <th>R:R</th>
-                                <th>P&L (₹)</th>
+                                <th>Brokerage</th>
+                                <th>P&L (Net)</th>
                                 <th>Status</th>
                                 <th>Notes</th>
                                 <th style="text-align: center;">Action</th>
@@ -315,23 +357,33 @@
             try {
                 const asset = document.getElementById('tradeAsset').value.toUpperCase();
                 const type = document.getElementById('tradeType').value;
-                const status = document.getElementById('tradeStatus').value;
                 const entry = parseFloat(document.getElementById('tradeEntry').value);
                 const exit = parseFloat(document.getElementById('tradeExit').value);
                 const sl = parseFloat(document.getElementById('tradeSL').value) || entry;
                 const qty = parseInt(document.getElementById('tradeQty').value);
+                const brokerage = parseFloat(document.getElementById('tradeBrokerage').value) || 0;
                 const date = document.getElementById('tradeDate').value;
                 const notes = document.getElementById('tradeNotes').value;
 
-                let pnl = type === 'BUY' ? (exit - entry) * qty : (entry - exit) * qty;
+                let grossPnl = type === 'BUY' ? (exit - entry) * qty : (entry - exit) * qty;
+                let pnl = grossPnl - brokerage;
+
+                let status = 'BE';
+                if(pnl > 0) {
+                    status = 'WIN';
+                } else if(pnl < 0) {
+                    status = 'LOSS';
+                }
+
                 let risk = Math.abs(entry - sl);
                 let reward = Math.abs(exit - entry);
                 let rrr = risk > 0 ? (reward / risk).toFixed(1) : '1.0';
 
-                trades.push({ id: Date.now(), asset, type, status, entry, exit, sl, qty, date, notes, pnl, rrr });
+                trades.push({ id: Date.now(), asset, type, status, entry, exit, sl, qty, brokerage, date, notes, pnl, rrr });
                 saveAndRender();
                 document.getElementById('tradeForm').reset();
                 document.getElementById('tradeDate').valueAsDate = new Date();
+                document.getElementById('tradeBrokerage').value = '0';
             } catch(err) {
                 console.error(err);
             }
@@ -365,7 +417,12 @@
             const tbody = document.getElementById('tradeTableBody');
             if(!tbody) return;
 
-            let filtered = activeFilter === 'ALL' ? trades : trades.filter(t => t.status === activeFilter);
+            let filtered = trades;
+            if(activeFilter === 'WIN' || activeFilter === 'LOSS') {
+                filtered = trades.filter(t => t.status === activeFilter);
+            } else if(activeFilter !== 'ALL') {
+                filtered = trades.filter(t => t.asset === activeFilter);
+            }
 
             if(filtered.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; color: var(--text-muted); padding: 2rem;">No trades found.</td></tr>`;
@@ -378,7 +435,7 @@
                         <td>${t.qty}</td>
                         <td>₹${t.entry.toFixed(2)}</td>
                         <td>₹${t.exit.toFixed(2)}</td>
-                        <td>1:${t.rrr}</td>
+                        <td style="color: #f87171;">-₹${(t.brokerage || 0).toFixed(2)}</td>
                         <td style="font-weight: bold;" class="${t.pnl >= 0 ? 'text-emerald' : 'text-rose'}">₹${t.pnl.toFixed(2)}</td>
                         <td><span class="badge ${t.status === 'WIN' ? 'badge-win' : t.status === 'LOSS' ? 'badge-loss' : 'badge-be'}">${t.status}</span></td>
                         <td style="color: var(--text-muted); font-style: italic;">${t.notes || '-'}</td>
@@ -450,8 +507,8 @@
 
         function exportData() {
             if(trades.length === 0) return alert('No trades to export.');
-            let csv = 'Date,Asset,Type,Quantity,Entry,Exit,P&L,Status,Notes\n';
-            trades.forEach(t => csv += `${t.date},${t.asset},${t.type},${t.qty},${t.entry},${t.exit},${t.pnl},${t.status},"${t.notes || ''}"\n`);
+            let csv = 'Date,Asset,Type,Quantity,Entry,Exit,Brokerage,Net P&L,Status,Notes\n';
+            trades.forEach(t => csv += `${t.date},${t.asset},${t.type},${t.qty},${t.entry},${t.exit},${t.brokerage || 0},${t.pnl},${t.status},"${t.notes || ''}"\n`);
             const blob = new Blob([csv], { type: 'text/csv;' });
             const a = document.createElement('a');
             a.href = URL.createObjectURL(blob);
